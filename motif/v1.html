@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Motif V1 Specs - Codon Lab</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; background-color: #fafafa; color: #171717; }
+        .font-mono { font-family: 'JetBrains Mono', monospace; }
+        .grid-bg {
+            background-image: linear-gradient(#e5e5e5 1px, transparent 1px),
+            linear-gradient(90deg, #e5e5e5 1px, transparent 1px);
+            background-size: 40px 40px;
+            background-position: center top;
+        }
+        .glass-card {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+        }
+        
+        /* 优化的代码块样式 */
+        .code-window {
+            background-color: #171717; /* 更深邃的黑 */
+            border-radius: 0.5rem;
+            overflow: hidden;
+            border: 1px solid #262626;
+        }
+        .code-header {
+            background-color: #1e1e1e;
+            padding: 0.5rem 1rem;
+            display: flex;
+            align-items: center;
+            border-bottom: 1px solid #262626;
+        }
+        .code-content {
+            color: #d4d4d4;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.75rem; /* 稍微调小一点字体，更像编辑器 */
+            line-height: 1.6;
+            padding: 1.5rem;
+            overflow-x: auto;
+            white-space: pre-wrap; 
+            word-break: break-all;
+        }
+        
+        /* 简单的语法高亮类 */
+        .hl-cls { color: #4ec9b0; font-weight: bold; } 
+        .hl-attr { color: #9cdcfe; } 
+        .hl-num { color: #b5cea8; } 
+        .hl-str { color: #ce9178; } 
+        .hl-kw { color: #569cd6; } 
+        .hl-comment { color: #6a9955; } 
+        
+        .flow-arrow {
+            color: #d1d5db; 
+            font-size: 1.25rem;
+        }
+        @media (max-width: 768px) {
+            .flow-arrow { transform: rotate(90deg); margin: 0.5rem 0; }
+        }
+    </style>
+</head>
+<body class="grid-bg min-h-screen flex flex-col">
+
+    <!-- Nav -->
+    <nav class="w-full py-5 px-6 md:px-12 flex justify-between items-center glass-card sticky top-0 z-50">
+        <a href="../index.html" class="text-lg font-semibold tracking-tight flex items-center gap-2 text-gray-900">
+            <div class="w-2.5 h-2.5 bg-blue-600 rounded-sm"></div>
+            Codon Lab
+        </a>
+        <div class="flex gap-4 text-sm font-medium text-gray-500">
+            <a href="/models" class="hover:text-black transition">← Back to Models</a>
+        </div>
+    </nav>
+
+    <main class="max-w-6xl mx-auto w-full px-6 py-12 md:flex gap-16 items-start">
+        
+        <!-- Sidebar: Meta Info (Sticky) -->
+        <!-- Added 'md:sticky md:top-28 self-start' to fix position -->
+        <aside class="w-full md:w-1/4 mb-10 md:mb-0 space-y-8 flex-shrink-0 md:sticky md:top-28 self-start">
+            <div>
+                <h1 class="text-3xl font-bold text-gray-900 mb-2">Motif V1</h1>
+                <div class="inline-flex items-center gap-2 px-2 py-1 bg-green-50 text-green-700 text-xs font-mono rounded border border-green-100">
+                    <span class="w-1.5 h-1.5 bg-green-500 rounded-full"></span>
+                    STABLE
+                </div>
+            </div>
+
+            <div class="space-y-4 text-sm">
+                <div>
+                    <span class="block text-gray-400 text-xs uppercase font-bold tracking-wider mb-1">Release Date</span>
+                    <span class="font-mono">2026-01-23</span>
+                </div>
+                <div>
+                    <span class="block text-gray-400 text-xs uppercase font-bold tracking-wider mb-1">Type</span>
+                    <span>Visual Encoder / VQ-VAE Variant</span>
+                </div>
+                <div>
+                    <span class="block text-gray-400 text-xs uppercase font-bold tracking-wider mb-1">Parameters</span>
+                    <span class="font-mono">~35M (Est.)</span>
+                </div>
+                <div>
+                    <span class="block text-gray-400 text-xs uppercase font-bold tracking-wider mb-1">Framework</span>
+                    <span class="font-mono">PyTorch / Orbit</span>
+                </div>
+            </div>
+
+            <div class="pt-6 border-t border-gray-200">
+                <a href="#" class="block w-full text-center py-2 bg-gray-900 text-white text-sm font-medium rounded-lg hover:bg-black transition mb-3">
+                    Download Weights (N/A)
+                </a>
+                <a href="https://github.com" class="block w-full text-center py-2 bg-white border border-gray-300 text-gray-700 text-sm font-medium rounded-lg hover:bg-gray-50 transition">
+                    View Source
+                </a>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <section class="w-full md:w-3/4 space-y-16 min-w-0">
+            
+            <!-- 1. Abstract -->
+            <div>
+                <h2 class="text-lg font-bold text-gray-900 mb-4">Abstract</h2>
+                <p class="text-gray-600 leading-relaxed text-sm md:text-base">
+                    Motif V1 是 Codon 体系中的基础视觉编码器。它旨在将高维像素数据压缩为离散的、语义丰富的 Latent Token。
+                    该模型采用了混合架构设计，结合了卷积网络的局部特征提取能力与 Attention 机制的全局上下文感知能力。
+                    为了适应未来大规模生成的需要，我们引入了 Lookup Free Quantization (LFQ) 以替代传统的 Codebook 查找。
+                </p>
+            </div>
+
+            <!-- 2. Data Flow -->
+            <div>
+                <h2 class="text-lg font-bold text-gray-900 mb-6">Data Flow</h2>
+                <div class="bg-white p-6 rounded-xl border border-gray-200">
+                    <div class="flex flex-col md:flex-row items-center justify-between text-xs font-mono text-gray-600 gap-2">
+                        <div class="w-full md:w-auto bg-gray-50 border border-gray-200 px-4 py-3 rounded text-center">
+                            Input<br><span class="text-[10px] text-gray-400">[B, 3, H, W]</span>
+                        </div>
+                        <span class="flow-arrow">→</span>
+                        <div class="w-full md:w-auto bg-blue-50 border border-blue-100 text-blue-700 px-4 py-3 rounded text-center">
+                            Encoder<br><span class="text-[10px] opacity-70">Conv + Attn</span>
+                        </div>
+                        <span class="flow-arrow">→</span>
+                        <div class="w-full md:w-auto bg-gray-900 text-white px-4 py-3 rounded text-center shadow-lg transform md:scale-110">
+                            Quantizer<br><span class="text-[10px] opacity-70">LFQ (Codebook)</span>
+                        </div>
+                        <span class="flow-arrow">→</span>
+                        <div class="w-full md:w-auto bg-blue-50 border border-blue-100 text-blue-700 px-4 py-3 rounded text-center">
+                            Decoder<br><span class="text-[10px] opacity-70">PixelShuffle</span>
+                        </div>
+                        <span class="flow-arrow">→</span>
+                        <div class="w-full md:w-auto bg-gray-50 border border-gray-200 px-4 py-3 rounded text-center">
+                            Output<br><span class="text-[10px] text-gray-400">Reconstruction</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 3. Technical Highlights -->
+            <div class="grid md:grid-cols-2 gap-6">
+                <div class="bg-white p-6 rounded-xl border border-gray-200">
+                    <h3 class="font-bold text-gray-900 mb-2 text-sm">MRoPE Integration</h3>
+                    <p class="text-xs text-gray-600 leading-relaxed">
+                        使用了 Multidimensional Rotary Positional Embedding。在 2D 特征图上引入旋转位置编码，增强了模型对空间几何关系的理解能力，优于传统的绝对位置编码。
+                    </p>
+                </div>
+                <div class="bg-white p-6 rounded-xl border border-gray-200">
+                    <h3 class="font-bold text-gray-900 mb-2 text-sm">Lookup Free Quantization</h3>
+                    <p class="text-xs text-gray-600 leading-relaxed">
+                        采用 LFQ (Linear Projection) 替代 Vector Quantization。通过将 latent 投影到超立方体顶点，极大降低了 Codebook Collapse 的风险，并提高了训练稳定性。
+                    </p>
+                </div>
+            </div>
+
+            <!-- 4. Module Hierarchy (Moved to Bottom, No Mac Icons) -->
+            <div>
+                <h2 class="text-lg font-bold text-gray-900 mb-4">Module Hierarchy</h2>
+                <div class="code-window">
+                    <div class="code-header">
+                        <!-- Clean Terminal Style Header -->
+                        <span class="text-[10px] text-gray-500 font-mono flex items-center gap-2">
+                            <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.582 4 8 4s8-1.79 8-4M4 7c0-2.21 3.582-4 8-4s8 1.79 8 4m0 5c0 2.21-3.582 4-8 4s-8-1.79-8-4"></path></svg>
+                            v1_architecture.log
+                        </span>
+                    </div>
+                    <div class="code-content"><span class="hl-cls">MotifV1</span>(
+  <span class="hl-comment"># Encoder: Compresses image to latent space</span>
+  (<span class="hl-attr">encoder</span>): <span class="hl-cls">MotifV1Encoder</span>(
+    (<span class="hl-attr">down_blocks</span>): <span class="hl-cls">ModuleList</span>(
+      <span class="hl-comment"># Series of ResBlocks and Downsample Convs</span>
+      (0): <span class="hl-cls">ResBasicBlock</span>(...)
+      (1): <span class="hl-cls">ConvBlock</span>(stride=<span class="hl-num">2</span>)
+      ...
+    )
+    (<span class="hl-attr">mid_attn</span>): <span class="hl-cls">SpatialMultiHeadAttention</span>(
+      (<span class="hl-attr">rope</span>): <span class="hl-cls">MRoPEInterleavedEmbedding</span>()
+      (<span class="hl-attr">q_proj</span>): <span class="hl-cls">Linear</span>(in=<span class="hl-num">256</span>, out=<span class="hl-num">256</span>)
+    )
+  )
+
+  <span class="hl-comment"># Quantization: Continuous -> Discrete</span>
+  (<span class="hl-attr">quantizer</span>): <span class="hl-cls">LFQ</span>(
+    (<span class="hl-attr">project_in</span>): <span class="hl-cls">Linear</span>(in=<span class="hl-num">256</span>, out=<span class="hl-num">14</span>)
+    (<span class="hl-attr">project_out</span>): <span class="hl-cls">Linear</span>(in=<span class="hl-num">14</span>, out=<span class="hl-num">256</span>)
+  )
+
+  <span class="hl-comment"># Decoder: Reconstructs image from latent</span>
+  (<span class="hl-attr">decoder</span>): <span class="hl-cls">MotifV1Decoder</span>(
+    (<span class="hl-attr">mid_attn</span>): <span class="hl-cls">SpatialMultiHeadAttention</span>(...)
+    (<span class="hl-attr">up_blocks</span>): <span class="hl-cls">ModuleList</span>(
+      (0): <span class="hl-cls">ResBasicBlock</span>(...)
+      (1): <span class="hl-cls">Sequential</span>(
+        (<span class="hl-attr">0</span>): <span class="hl-cls">ConvBlock</span>(...)
+        (<span class="hl-attr">1</span>): <span class="hl-cls">PixelShuffle</span>(upscale_factor=<span class="hl-num">2</span>)
+      )
+      ...
+    )
+    (<span class="hl-attr">conv_out</span>): <span class="hl-cls">Conv2d</span>(out=<span class="hl-num">3</span>)
+  )
+)</div>
+                </div>
+            </div>
+
+        </section>
+    </main>
+
+    <footer class="mt-auto py-8 px-6 border-t border-gray-200 bg-white">
+        <div class="max-w-6xl mx-auto text-center text-xs text-gray-400">
+            &copy; 2026 Codon Lab.
+        </div>
+    </footer>
+
+</body>
+</html>

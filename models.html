@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Model Lists - Codon Lab</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; background-color: #fafafa; color: #171717; }
+        .font-mono { font-family: 'JetBrains Mono', monospace; }
+        .grid-bg {
+            background-image: linear-gradient(#e5e5e5 1px, transparent 1px),
+            linear-gradient(90deg, #e5e5e5 1px, transparent 1px);
+            background-size: 40px 40px;
+            background-position: center top;
+        }
+        .glass-card {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+        }
+    </style>
+</head>
+<body class="grid-bg min-h-screen flex flex-col">
+
+    <!-- Nav -->
+    <nav class="w-full py-5 px-6 md:px-12 flex justify-between items-center glass-card sticky top-0 z-50">
+        <a href="index.html" class="text-lg font-semibold tracking-tight flex items-center gap-2 text-gray-900">
+            <div class="w-2.5 h-2.5 bg-blue-600 rounded-sm"></div>
+            Codon Lab
+        </a>
+        <div class="hidden md:flex gap-8 text-sm font-medium text-gray-500">
+            <a href="index.html" class="hover:text-black transition">Mission</a>
+            <a href="models.html" class="text-black font-semibold">Models</a>
+            <a href="https://github.com" target="_blank" class="hover:text-black transition">Github</a>
+        </div>
+    </nav>
+
+    <main class="max-w-5xl mx-auto w-full px-6 py-16">
+        
+        <header class="mb-16">
+            <h1 class="text-3xl md:text-4xl font-semibold text-gray-900 mb-4">Model Garden</h1>
+            <p class="text-gray-600 max-w-2xl font-light">
+                Codon Lab 的模型库分为两类：用于专项技术验证的 
+                <span class="font-medium text-gray-900">Motif 系列</span>，
+                以及未来集大成的 <span class="font-medium text-gray-900">Codon 正式版系列</span>。
+            </p>
+        </header>
+
+        <!-- SECTION 1: MOTIF SERIES -->
+        <section class="mb-20">
+            <div class="flex items-center gap-4 mb-8">
+                <h2 class="text-xl font-bold text-gray-900">Validation Series</h2>
+                <span class="px-2 py-1 bg-blue-50 text-blue-700 text-[10px] font-mono rounded border border-blue-100 uppercase tracking-wide">Motif Codes</span>
+            </div>
+
+            <div class="grid md:grid-cols-2 gap-6">
+                <!-- Motif V1 -->
+                <div class="bg-white rounded-xl border border-gray-200 p-6 shadow-sm hover:shadow-md transition">
+                    <div class="flex justify-between items-start mb-4">
+                        <div class="flex items-center gap-2">
+                            <h3 class="text-lg font-bold">Motif V1</h3>
+                            <span class="text-xs bg-green-100 text-green-700 px-2 py-0.5 rounded font-mono">VISION</span>
+                        </div>
+                        <span class="text-xs text-gray-400 font-mono">v1.0.0</span>
+                    </div>
+                    <p class="text-sm text-gray-600 mb-6 h-10 line-clamp-2">
+                        基于 VQ-GAN + LFQ 的视觉压缩单元。用于构建意识模型的感知输入层。
+                    </p>
+                    <a href="motif/v1" class="inline-flex items-center justify-center w-full py-2.5 border border-gray-300 text-sm font-medium rounded-lg hover:bg-gray-50 transition">
+                        View Specs & Details
+                    </a>
+                </div>
+
+                <!-- Motif M1 -->
+                <div class="bg-white rounded-xl border border-gray-200 border-dashed p-6 bg-gray-50/50">
+                    <div class="flex justify-between items-start mb-4">
+                        <div class="flex items-center gap-2">
+                            <h3 class="text-lg font-bold text-gray-500">Motif M1</h3>
+                            <span class="text-xs bg-gray-100 text-gray-500 px-2 py-0.5 rounded font-mono">MULTIMODAL</span>
+                        </div>
+                        <span class="text-xs text-blue-600 font-mono">DEV</span>
+                    </div>
+                    <p class="text-sm text-gray-500 mb-6 h-10 line-clamp-2">
+                        跨模态翻译与对齐实验。探索视觉与语言的语义映射。
+                    </p>
+                    <button disabled class="w-full py-2.5 border border-dashed border-gray-300 text-gray-400 text-sm font-medium rounded-lg cursor-not-allowed">
+                        In Progress
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 2: CODON SERIES (Planned) -->
+        <section>
+            <div class="flex items-center gap-4 mb-8">
+                <h2 class="text-xl font-bold text-gray-900">Formal Series</h2>
+                <span class="px-2 py-1 bg-gray-100 text-gray-600 text-[10px] font-mono rounded border border-gray-200 uppercase tracking-wide">The Goal</span>
+            </div>
+
+            <!-- Table Layout for Formal Series -->
+            <div class="bg-white border border-gray-200 rounded-xl overflow-hidden">
+                <table class="w-full text-left text-sm">
+                    <thead class="bg-gray-50 border-b border-gray-200 font-mono text-xs text-gray-500 uppercase">
+                        <tr>
+                            <th class="px-6 py-4 font-medium">Model</th>
+                            <th class="px-6 py-4 font-medium">Tier</th>
+                            <th class="px-6 py-4 font-medium">Target Description</th>
+                            <th class="px-6 py-4 font-medium text-right">Status</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-gray-100">
+                        <tr class="group hover:bg-gray-50 transition">
+                            <td class="px-6 py-4 font-mono font-medium text-gray-900">Codon Pico</td>
+                            <td class="px-6 py-4 text-xs text-gray-500">Skeleton</td>
+                            <td class="px-6 py-4 text-gray-600">极简架构验证版，用于学术开源。</td>
+                            <td class="px-6 py-4 text-right text-xs text-gray-400 font-mono">PLANNED</td>
+                        </tr>
+                        <tr class="group hover:bg-gray-50 transition">
+                            <td class="px-6 py-4 font-mono font-medium text-gray-900">Codon Nano</td>
+                            <td class="px-6 py-4 text-xs text-gray-500">Organism</td>
+                            <td class="px-6 py-4 text-gray-600">端侧运行的轻量级助手。</td>
+                            <td class="px-6 py-4 text-right text-xs text-gray-400 font-mono">PLANNED</td>
+                        </tr>
+                        <tr class="group hover:bg-gray-50 transition opacity-50">
+                            <td class="px-6 py-4 font-mono font-medium text-gray-900">Codon Max</td>
+                            <td class="px-6 py-4 text-xs text-gray-500">Genome</td>
+                            <td class="px-6 py-4 text-gray-600">全能力旗舰模型，具备复杂推理能力。</td>
+                            <td class="px-6 py-4 text-right text-xs text-gray-400 font-mono">FUTURE</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+    </main>
+</body>
+</html>
