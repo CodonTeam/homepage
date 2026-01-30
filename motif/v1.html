@@ -79,7 +79,6 @@
     <main class="max-w-6xl mx-auto w-full px-6 py-12 md:flex gap-16 items-start">
         
         <!-- Sidebar: Meta Info (Sticky) -->
-        <!-- Added 'md:sticky md:top-28 self-start' to fix position -->
         <aside class="w-full md:w-1/4 mb-10 md:mb-0 space-y-8 flex-shrink-0 md:sticky md:top-28 self-start">
             <div>
                 <h1 class="text-3xl font-bold text-gray-900 mb-2">Motif V1</h1>
@@ -92,7 +91,7 @@
             <div class="space-y-4 text-sm">
                 <div>
                     <span class="block text-gray-400 text-xs uppercase font-bold tracking-wider mb-1">Release Date</span>
-                    <span class="font-mono">2026-01-23</span>
+                    <span class="font-mono">2026-01-30</span>
                 </div>
                 <div>
                     <span class="block text-gray-400 text-xs uppercase font-bold tracking-wider mb-1">Type</span>
@@ -100,7 +99,7 @@
                 </div>
                 <div>
                     <span class="block text-gray-400 text-xs uppercase font-bold tracking-wider mb-1">Parameters</span>
-                    <span class="font-mono">~35M (Est.)</span>
+                    <span class="font-mono">~40M (Est.)</span>
                 </div>
                 <div>
                     <span class="block text-gray-400 text-xs uppercase font-bold tracking-wider mb-1">Framework</span>
@@ -109,11 +108,11 @@
             </div>
 
             <div class="pt-6 border-t border-gray-200">
-                <a href="#" class="block w-full text-center py-2 bg-gray-900 text-white text-sm font-medium rounded-lg hover:bg-black transition mb-3">
-                    Download Weights (N/A)
+                <a href="https://huggingface.co/A03HCY/Codon-Motif-vision-1" target="_blank" class="block w-full text-center py-2 bg-gray-900 text-white text-sm font-medium rounded-lg hover:bg-black transition mb-3">
+                    Hugging Face
                 </a>
-                <a href="https://github.com" class="block w-full text-center py-2 bg-white border border-gray-300 text-gray-700 text-sm font-medium rounded-lg hover:bg-gray-50 transition">
-                    View Source
+                <a href="https://www.modelscope.cn/models/Hopkins/Codon-Motif-vision-1" target="_blank" class="block w-full text-center py-2 bg-gray-900 text-white text-sm font-medium rounded-lg hover:bg-black transition mb-3">
+                    ModelScope
                 </a>
             </div>
         </aside>
@@ -121,13 +120,11 @@
         <!-- Main Content -->
         <section class="w-full md:w-3/4 space-y-16 min-w-0">
             
-            <!-- 1. Abstract -->
+            <!-- 1. Model Introduction -->
             <div>
-                <h2 class="text-lg font-bold text-gray-900 mb-4">Abstract</h2>
+                <h2 class="text-lg font-bold text-gray-900 mb-4">模型介绍</h2>
                 <p class="text-gray-600 leading-relaxed text-sm md:text-base">
-                    Motif V1 是 Codon 体系中的基础视觉编码器。它旨在将高维像素数据压缩为离散的、语义丰富的 Latent Token。
-                    该模型采用了混合架构设计，结合了卷积网络的局部特征提取能力与 Attention 机制的全局上下文感知能力。
-                    为了适应未来大规模生成的需要，我们引入了 Lookup Free Quantization (LFQ) 以替代传统的 Codebook 查找。
+                    <strong>Codon Motif Vision 1</strong> 是一个实验性的视觉 Tokenizer (Visual Tokenizer) 模型，可以支持任意尺度图片。
                 </p>
             </div>
 
@@ -159,23 +156,151 @@
                 </div>
             </div>
 
-            <!-- 3. Technical Highlights -->
-            <div class="grid md:grid-cols-2 gap-6">
-                <div class="bg-white p-6 rounded-xl border border-gray-200">
-                    <h3 class="font-bold text-gray-900 mb-2 text-sm">MRoPE Integration</h3>
-                    <p class="text-xs text-gray-600 leading-relaxed">
-                        使用了 Multidimensional Rotary Positional Embedding。在 2D 特征图上引入旋转位置编码，增强了模型对空间几何关系的理解能力，优于传统的绝对位置编码。
-                    </p>
-                </div>
-                <div class="bg-white p-6 rounded-xl border border-gray-200">
-                    <h3 class="font-bold text-gray-900 mb-2 text-sm">Lookup Free Quantization</h3>
-                    <p class="text-xs text-gray-600 leading-relaxed">
-                        采用 LFQ (Linear Projection) 替代 Vector Quantization。通过将 latent 投影到超立方体顶点，极大降低了 Codebook Collapse 的风险，并提高了训练稳定性。
-                    </p>
+            <!-- 3. Technical Specifications -->
+            <div>
+                <h2 class="text-lg font-bold text-gray-900 mb-6">技术规格</h2>
+                <div class="bg-white rounded-xl border border-gray-200 divide-y divide-gray-100">
+                    <div class="p-4">
+                        <span class="font-bold text-gray-900 text-sm">量化 (Quantizer)</span>
+                        <p class="mt-1 text-xs text-gray-600">采用 <strong>LFQ (Lookup Free Quantization)</strong>，一种无查表的向量量化技术，计算包含熵 (Entropy) 和困惑度 (Perplexity)。</p>
+                    </div>
+                    <div class="p-4">
+                        <span class="font-bold text-gray-900 text-sm">位置编码</span>
+                        <p class="mt-1 text-xs text-gray-600">集成 <strong>2D RoPE (Rotary Positional Embedding)</strong> 二维旋转位置编码，增强空间感知。</p>
+                    </div>
+                    <div class="p-4">
+                        <span class="font-bold text-gray-900 text-sm">注意力机制</span>
+                        <p class="mt-1 text-xs text-gray-600">Encoder 和 Decoder 均使用 <strong>Spatial Multi-Head Attention</strong> (空间多头注意力)。</p>
+                    </div>
+                    <div class="p-4">
+                        <span class="font-bold text-gray-900 text-sm">编码器 (Encoder)</span>
+                        <p class="mt-1 text-xs text-gray-600">结合 ConvBlock 和 ResBasicBlock，支持动态输入尺寸。</p>
+                    </div>
+                    <div class="p-4">
+                        <span class="font-bold text-gray-900 text-sm">解码器 (Decoder)</span>
+                        <p class="mt-1 text-xs text-gray-600">使用 <strong>PixelShuffle</strong> 进行上采样重建。</p>
+                    </div>
                 </div>
             </div>
 
-            <!-- 4. Module Hierarchy (Moved to Bottom, No Mac Icons) -->
+            <!-- 4. Model Parameters & Files -->
+            <div>
+                <h2 class="text-lg font-bold text-gray-900 mb-6">模型参数与文件</h2>
+                
+                <h3 class="font-bold text-gray-800 mb-3 text-sm">文件清单</h3>
+                <div class="bg-white rounded-xl border border-gray-200 overflow-hidden mb-6">
+                    <table class="w-full text-sm text-left">
+                        <thead class="bg-gray-50 text-gray-500 font-medium border-b border-gray-200">
+                            <tr>
+                                <th class="px-4 py-3">文件名</th>
+                                <th class="px-4 py-3">大小</th>
+                                <th class="px-4 py-3">说明</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-gray-100 text-gray-700">
+                            <tr>
+                                <td class="px-4 py-3 font-mono text-xs">motif-v1.safetensors</td>
+                                <td class="px-4 py-3 text-xs">84.92MB</td>
+                                <td class="px-4 py-3 text-xs">全量模型权重</td>
+                            </tr>
+                            <tr>
+                                <td class="px-4 py-3 font-mono text-xs">motif-v1_encoder.safetensors</td>
+                                <td class="px-4 py-3 text-xs">43.32MB</td>
+                                <td class="px-4 py-3 text-xs">仅 Encoder 权重</td>
+                            </tr>
+                            <tr>
+                                <td class="px-4 py-3 font-mono text-xs">motif-v1_decoder.safetensors</td>
+                                <td class="px-4 py-3 text-xs">41.56MB</td>
+                                <td class="px-4 py-3 text-xs">仅 Decoder 权重</td>
+                            </tr>
+                            <tr>
+                                <td class="px-4 py-3 font-mono text-xs">motif-v1_quantizer.safetensors</td>
+                                <td class="px-4 py-3 text-xs">34.37KB</td>
+                                <td class="px-4 py-3 text-xs">仅 Quantizer 权重</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <h3 class="font-bold text-gray-800 mb-3 text-sm">默认配置</h3>
+                <ul class="list-disc list-inside space-y-1 text-sm text-gray-600 bg-white p-6 rounded-xl border border-gray-200">
+                    <li><strong>输入/输出通道</strong>: 3 (RGB)</li>
+                    <li><strong>Patch Size</strong>: 16</li>
+                    <li><strong>Latent Dim</strong>: 256</li>
+                    <li><strong>Codebook Dim</strong>: 16</li>
+                    <li><strong>Encoder</strong>: Hidden Dim 256, 1 ResBlock, 4 Heads</li>
+                    <li><strong>Decoder</strong>: Hidden Dim 256, 3 ResBlocks, 4 Heads</li>
+                    <li><strong>RoPE Max Len</strong>: 4096</li>
+                </ul>
+            </div>
+
+            <!-- 5. Usage -->
+            <div>
+                <h2 class="text-lg font-bold text-gray-900 mb-6">使用方法</h2>
+                
+                <h3 class="font-bold text-gray-800 mb-3 text-sm">1. 安装依赖</h3>
+                <p class="text-sm text-gray-600 mb-2">确保已安装 <code>orbit-torch</code> 库：</p>
+                <div class="code-window mb-8">
+                    <div class="code-content">pip install orbit-torch</div>
+                </div>
+
+                <h3 class="font-bold text-gray-800 mb-3 text-sm">2. 模型加载</h3>
+                <p class="text-sm text-gray-600 mb-4">使用 <code>load_pretrained</code> 方法加载权重。权重分为全量权重和部分权重（Encoder, Decoder, Quantizer）。</p>
+
+                <div class="space-y-6">
+                    <div>
+                        <h4 class="font-medium text-gray-800 text-xs uppercase tracking-wider mb-2">导入模块</h4>
+                        <div class="code-window">
+                            <div class="code-content"><span class="hl-kw">from</span> orbit.model.motif.vision.v1 <span class="hl-kw">import</span> MotifV1</div>
+                        </div>
+                    </div>
+
+                    <div>
+                        <h4 class="font-medium text-gray-800 text-xs uppercase tracking-wider mb-2">场景 A：加载全量模型</h4>
+                        <div class="code-window">
+                            <div class="code-content">model = MotifV1()
+model.load_pretrained(<span class="hl-str">'motif-v1.safetensors'</span>)</div>
+                        </div>
+                    </div>
+
+                    <div>
+                        <h4 class="font-medium text-gray-800 text-xs uppercase tracking-wider mb-2">场景 B：仅使用 Encoder</h4>
+                        <p class="text-xs text-gray-500 mb-2">注意：在使用 Encoder 提取 Token 时，<strong>必须</strong>同时加载 Quantizer。通过 <code>MotifV1</code> 实例访问子模块进行加载。</p>
+                        <div class="code-window">
+                            <div class="code-content"><span class="hl-comment"># 1. 实例化主模型</span>
+model = MotifV1()
+
+<span class="hl-comment"># 2. 分别加载权重</span>
+model.encoder.load_pretrained(<span class="hl-str">'motif-v1_encoder.safetensors'</span>)
+model.quantizer.load_pretrained(<span class="hl-str">'motif-v1_quantizer.safetensors'</span>)
+
+<span class="hl-comment"># 3. 使用示例 (使用封装好的 encode 方法)</span>
+<span class="hl-comment"># x = torch.randn(1, 3, 256, 256) # [B, 3, H, W]</span>
+<span class="hl-comment"># indices, mask, z_q = model.encode(x)</span>
+<span class="hl-comment"># print(indices.shape) # [B, H, W]</span></div>
+                        </div>
+                    </div>
+
+                    <div>
+                        <h4 class="font-medium text-gray-800 text-xs uppercase tracking-wider mb-2">场景 C：仅使用 Decoder</h4>
+                        <p class="text-xs text-gray-500 mb-2">注意：在使用 Decoder 重建图像时，<strong>必须</strong>同时加载 Quantizer（用于将索引还原为向量）。</p>
+                        <div class="code-window">
+                            <div class="code-content"><span class="hl-comment"># 1. 实例化主模型</span>
+model = MotifV1()
+
+<span class="hl-comment"># 2. 分别加载权重</span>
+model.decoder.load_pretrained(<span class="hl-str">'motif-v1_decoder.safetensors'</span>)
+model.quantizer.load_pretrained(<span class="hl-str">'motif-v1_quantizer.safetensors'</span>)
+
+<span class="hl-comment"># 3. 使用示例 (使用封装好的 decode 方法)</span>
+<span class="hl-comment"># indices = ... # [B, H, W]</span>
+<span class="hl-comment"># reconstruction = model.decode(indices)</span></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 6. Module Hierarchy -->
             <div>
                 <h2 class="text-lg font-bold text-gray-900 mb-4">Module Hierarchy</h2>
                 <div class="code-window">
