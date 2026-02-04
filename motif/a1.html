@@ -236,52 +236,7 @@
                 </div>
             </div>
 
-            <!-- 4. Usage -->
-            <div>
-                <h2 class="text-lg font-bold text-gray-900 mb-6">调用示例</h2>
-                
-                <h3 class="font-bold text-gray-800 mb-3 text-sm">模型初始化与前向传播</h3>
-                <div class="code-window">
-                    <div class="code-header">
-                        <div class="flex gap-1.5">
-                            <div class="w-2.5 h-2.5 rounded-full bg-red-500/20 border border-red-500/50"></div>
-                            <div class="w-2.5 h-2.5 rounded-full bg-yellow-500/20 border border-yellow-500/50"></div>
-                            <div class="w-2.5 h-2.5 rounded-full bg-green-500/20 border border-green-500/50"></div>
-                        </div>
-                        <span class="ml-4 text-xs text-gray-500 font-mono">inference.py</span>
-                    </div>
-                    <div class="code-content"><span class="hl-kw">import</span> torch
-<span class="hl-kw">from</span> orbit.model.motif.language.a1 <span class="hl-kw">import</span> A1Model
-
-<span class="hl-comment"># 1. Initialize Model Configuration</span>
-<span class="hl-comment"># Example: A small research model configuration</span>
-model = <span class="hl-cls">A1Model</span>(
-    vocab_size=<span class="hl-num">32000</span>,
-    model_dim=<span class="hl-num">512</span>,
-    num_layers=<span class="hl-num">8</span>,
-    num_heads=<span class="hl-num">8</span>,      <span class="hl-comment"># Query Heads</span>
-    num_kv_heads=<span class="hl-num">2</span>,   <span class="hl-comment"># KV Heads (GQA ratio = 4)</span>
-    mlp_ratio=<span class="hl-num">2</span>,      <span class="hl-comment"># Hidden dim = 1024</span>
-    max_len=<span class="hl-num">2048</span>
-).cuda()
-
-<span class="hl-comment"># 2. Prepare Input (Batch=2, Seq=10)</span>
-<span class="hl-comment"># Random integer tokens simulating input_ids</span>
-input_ids = torch.randint(<span class="hl-num">0</span>, <span class="hl-num">32000</span>, (<span class="hl-num">2</span>, <span class="hl-num">10</span>)).cuda()
-
-<span class="hl-comment"># 3. Forward Pass</span>
-<span class="hl-comment"># output contains logits and past_key_values for caching</span>
-output = model(
-    input_ids=input_ids, 
-    use_cache=<span class="hl-kw">True</span>
-)
-
-print(<span class="hl-str">f"Logits Shape: {output.logits.shape}"</span>) 
-<span class="hl-comment"># >> Logits Shape: torch.Size([2, 10, 32000])</span></div>
-                </div>
-            </div>
-
-            <!-- 5. Architecture Tree -->
+            <!-- 4. Architecture Tree -->
             <div>
                 <h2 class="text-lg font-bold text-gray-900 mb-4">Module Hierarchy</h2>
                 <div class="code-window">
