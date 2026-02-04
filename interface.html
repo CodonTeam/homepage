@@ -165,11 +165,11 @@
 
     <!-- Navbar -->
     <nav class="w-full glass-card flex-shrink-0 z-50">
-        <div class="max-w-4xl mx-auto px-4 md:px-0 py-3 flex justify-between items-center">
+        <div class="max-w-6xl mx-auto px-6 py-4 md:py-5 flex justify-between items-center relative">
             <div class="flex items-center gap-4">
-                <a href="/" class="text-sm font-semibold tracking-tight flex items-center gap-2 text-gray-900 group">
-                    <div class="w-2 h-2 bg-blue-600 rounded-sm group-hover:bg-blue-700 transition"></div>
-                    Codon Lab <span class="text-gray-400 font-normal">/ 推理终端</span>
+                <a href="/" class="text-lg font-semibold tracking-tight flex items-center gap-2 text-gray-900 group">
+                    <div class="w-2.5 h-2.5 bg-blue-600 rounded-sm group-hover:bg-blue-700 transition"></div>
+                    Codon Lab <span class="text-gray-400 font-normal text-sm ml-1">/ 推理终端</span>
                 </a>
             </div>
             
@@ -177,49 +177,48 @@
                 <span id="current-model-label" class="font-mono text-gray-600">motif_a1</span>
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
             </button>
-        </div>
 
-        <!-- Settings Panel -->
-        <div id="settings-panel" class="hidden-panel absolute top-14 right-4 md:right-[calc(50%-28rem+1rem)] w-80 bg-white rounded-xl border border-gray-200 shadow-xl z-50 p-6 flex flex-col gap-5">
-            <div>
-                <h3 class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-3">连接配置</h3>
-                <div class="space-y-3">
-                    <div>
-                        <label class="block text-[10px] font-medium text-gray-500 mb-1">Base URL</label>
-                        <input type="text" id="setting-url" class="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-md text-xs font-mono focus:outline-none focus:border-blue-500 transition" placeholder="http://localhost:8000/v1">
-                    </div>
-                    <div>
-                        <label class="block text-[10px] font-medium text-gray-500 mb-1">API Key</label>
-                        <input type="password" id="setting-key" class="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-md text-xs font-mono focus:outline-none focus:border-blue-500 transition" placeholder="sk-...">
+            <div id="settings-panel" class="hidden-panel absolute top-16 right-6 w-80 bg-white rounded-xl border border-gray-200 shadow-xl z-50 p-6 flex flex-col gap-5">
+                <div>
+                    <h3 class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-3">连接配置</h3>
+                    <div class="space-y-3">
+                        <div>
+                            <label class="block text-[10px] font-medium text-gray-500 mb-1">Base URL</label>
+                            <input type="text" id="setting-url" class="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-md text-xs font-mono focus:outline-none focus:border-blue-500 transition" placeholder="http://localhost:8000/v1">
+                        </div>
+                        <div>
+                            <label class="block text-[10px] font-medium text-gray-500 mb-1">API Key</label>
+                            <input type="password" id="setting-key" class="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-md text-xs font-mono focus:outline-none focus:border-blue-500 transition" placeholder="sk-...">
+                        </div>
                     </div>
                 </div>
-            </div>
 
-            <div class="border-t border-gray-100 pt-5">
-                <h3 class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-3">生成参数</h3>
-                <div class="space-y-4">
-                    <div>
-                        <label class="block text-[10px] font-medium text-gray-500 mb-1">Model ID</label>
-                        <input type="text" id="setting-model" class="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-md text-xs font-mono focus:outline-none focus:border-blue-500 transition" placeholder="motif_a1">
-                    </div>
-                    <div>
-                        <div class="flex justify-between mb-1">
-                            <label class="text-[10px] font-medium text-gray-500">温度 (Temperature)</label>
-                            <span id="val-temp" class="text-[10px] font-mono text-gray-900">0.7</span>
+                <div class="border-t border-gray-100 pt-5">
+                    <h3 class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-3">生成参数</h3>
+                    <div class="space-y-4">
+                        <div>
+                            <label class="block text-[10px] font-medium text-gray-500 mb-1">Model ID</label>
+                            <input type="text" id="setting-model" class="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-md text-xs font-mono focus:outline-none focus:border-blue-500 transition" placeholder="motif_a1">
                         </div>
-                        <input type="range" id="setting-temp" min="0" max="2" step="0.1" class="w-full h-1 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-blue-600">
-                    </div>
-                    <div>
-                        <div class="flex justify-between mb-1">
-                            <label class="text-[10px] font-medium text-gray-500">核采样 (Top P)</label>
-                            <span id="val-topp" class="text-[10px] font-mono text-gray-900">0.9</span>
+                        <div>
+                            <div class="flex justify-between mb-1">
+                                <label class="text-[10px] font-medium text-gray-500">温度 (Temperature)</label>
+                                <span id="val-temp" class="text-[10px] font-mono text-gray-900">0.7</span>
+                            </div>
+                            <input type="range" id="setting-temp" min="0" max="2" step="0.1" class="w-full h-1 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-blue-600">
                         </div>
-                        <input type="range" id="setting-topp" min="0" max="1" step="0.05" class="w-full h-1 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-blue-600">
+                        <div>
+                            <div class="flex justify-between mb-1">
+                                <label class="text-[10px] font-medium text-gray-500">核采样 (Top P)</label>
+                                <span id="val-topp" class="text-[10px] font-mono text-gray-900">0.9</span>
+                            </div>
+                            <input type="range" id="setting-topp" min="0" max="1" step="0.05" class="w-full h-1 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-blue-600">
+                        </div>
                     </div>
                 </div>
-            </div>
 
-            <button id="save-settings" class="w-full py-2.5 bg-gray-900 text-white text-xs font-medium rounded-lg hover:bg-black transition shadow-lg shadow-gray-200">保存配置</button>
+                <button id="save-settings" class="w-full py-2.5 bg-gray-900 text-white text-xs font-medium rounded-lg hover:bg-black transition shadow-lg shadow-gray-200">保存配置</button>
+            </div>
         </div>
     </nav>
 
