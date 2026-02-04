@@ -23,31 +23,60 @@
             background-position: center top;
         }
         .glass-card {
-            background: rgba(255, 255, 255, 0.8);
+            background: rgba(255, 255, 255, 0.85);
             backdrop-filter: blur(12px);
             -webkit-backdrop-filter: blur(12px);
             border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+        }
+        /* 移动端菜单过渡 */
+        #mobile-menu {
+            transition: all 0.3s ease-in-out;
+            max-height: 0;
+            overflow: hidden;
+        }
+        #mobile-menu.open {
+            max-height: 300px;
+            padding-bottom: 1.5rem;
         }
     </style>
 </head>
 <body class="grid-bg min-h-screen flex flex-col">
 
-    <nav class="w-full py-5 px-6 md:px-12 flex justify-between items-center glass-card sticky top-0 z-50">
-        <div class="text-lg font-semibold tracking-tight flex items-center gap-2 text-gray-900">
-            <div class="w-2.5 h-2.5 bg-blue-600 rounded-sm"></div>
-            Codon Lab
+    <!-- AppBar / Navigation -->
+    <nav class="w-full glass-card sticky top-0 z-50">
+        <div class="max-w-6xl mx-auto px-6 py-4 md:py-5 flex justify-between items-center">
+            <div class="text-lg font-semibold tracking-tight flex items-center gap-2 text-gray-900">
+                <div class="w-2.5 h-2.5 bg-blue-600 rounded-sm"></div>
+                Codon Lab
+            </div>
+            
+            <!-- Desktop Menu -->
+            <div class="hidden md:flex gap-8 text-sm font-medium text-gray-500">
+                <a href="/models" class="hover:text-black transition">Models</a>
+                <a href="/profile" class="hover:text-black transition">Team</a>
+                <a href="https://github.com/CodonTeam" target="_blank" class="hover:text-black transition">Github</a>
+            </div>
+
+            <!-- Mobile Menu Button -->
+            <button id="menu-toggle" class="md:hidden p-2 text-gray-600 hover:text-black transition">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path id="menu-icon" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path></svg>
+            </button>
         </div>
-        <div class="hidden md:flex gap-8 text-sm font-medium text-gray-500">
-            <a href="/models" class="hover:text-black transition">Models</a>
-            <a href="/profile" class="hover:text-black transition">Team</a>
-            <a href="https://github.com/CodonTeam" target="_blank" class="hover:text-black transition">Github</a>
+
+        <!-- Mobile Menu Drawer -->
+        <div id="mobile-menu" class="md:hidden px-6 bg-white/50">
+            <div class="flex flex-col gap-4 text-sm font-medium text-gray-600">
+                <a href="/models" class="py-2 border-b border-gray-100 transition">Models</a>
+                <a href="/profile" class="py-2 border-b border-gray-100 transition">Team</a>
+                <a href="https://github.com/CodonTeam" target="_blank" class="py-2 transition">Github</a>
+            </div>
         </div>
     </nav>
 
     <!-- Hero Section -->
-    <header id="mission" class="max-w-4xl mx-auto w-full px-6 py-28 md:py-40">
+    <header id="mission" class="max-w-4xl mx-auto w-full px-6 py-24 md:py-40">
         <div class="inline-flex items-center gap-2 px-3 py-1 mb-8 text-xs font-mono text-gray-500 bg-white border border-gray-200 rounded-full shadow-sm">
-            <span class="w-1.5 h-1.5 bg-green-500 rounded-full"></span>
+            <span class="w-1.5 h-1.5 bg-green-500 rounded-full animate-pulse"></span>
             Operational
         </div>
         
@@ -58,114 +87,147 @@
         
         <p class="text-lg md:text-xl text-gray-600 max-w-2xl mb-12 leading-relaxed font-light">
             Codon Lab 致力于通过底层架构创新，寻找通往 AGI（通用人工智能）的可行路径。
-            我们不满足于拟合数据，我们试图用代码重构意识产生的最小机理。
+            我们通过高性能计算架构，重构智能产生的最小机理。
         </p>
         
-        <div class="flex gap-4">
-            <a href="/models" class="bg-gray-900 text-white px-6 py-2.5 rounded-lg text-sm font-medium hover:bg-black transition shadow-lg shadow-gray-200/50">
-                所有模型
+        <div class="flex flex-wrap gap-4">
+            <a href="/models" class="bg-gray-900 text-white px-8 py-3 rounded-lg text-sm font-medium hover:bg-black transition shadow-lg shadow-gray-200/50">
+                查看研究模型
             </a>
-            <a href="https://github.com" class="bg-white border border-gray-200 text-gray-700 px-6 py-2.5 rounded-lg text-sm font-medium hover:bg-gray-50 transition">
+            <a href="https://github.com/CodonTeam" class="bg-white border border-gray-200 text-gray-700 px-8 py-3 rounded-lg text-sm font-medium hover:bg-gray-50 transition">
                 源码仓库
             </a>
         </div>
     </header>
 
     <section id="models" class="max-w-4xl mx-auto w-full px-6 pb-32">
-        <h2 class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-8">Research Models</h2>
+        <h2 class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-10">Research Models</h2>
         
-        <div class="flex flex-col gap-8">
-            <!-- Card: Motif V1 -->
+        <div class="flex flex-col gap-10">
+
+            <!-- Card: Motif A1 -->
+            <div class="bg-white rounded-xl border border-gray-900 shadow-sm overflow-hidden relative">
+                <div class="p-8">
+                    <div class="flex justify-between items-start mb-4">
+                        <div>
+                            <div class="flex items-center gap-3 mb-1">
+                                <h3 class="text-2xl font-bold text-gray-900">Motif A1</h3>
+                                <span class="px-2 py-0.5 bg-blue-600 text-white text-[10px] font-mono rounded">ACTIVE</span>
+                            </div>
+                            <p class="text-sm text-gray-500">Causal Language Modeling / Reasoning</p>
+                        </div>
+                        <div class="text-right">
+                            <span class="inline-flex items-center gap-1 text-[10px] font-mono text-green-600">
+                                <span class="w-1 h-1 bg-green-500 rounded-full animate-ping"></span>
+                                TRAINING
+                            </span>
+                        </div>
+                    </div>
+                    
+                    <p class="text-gray-600 text-sm leading-relaxed max-w-2xl mb-8">
+                        采用标准的 Transformer Decoder 结构，专注于长序列建模与上下文推理。A1 通过集成的旋转位置编码 (RoPE) 和门控 MLP 单元，在处理逻辑关联任务时表现出极高的能效比。
+                    </p>
+
+                    <!-- Technical Specs Grid -->
+                    <div class="bg-gray-50 rounded-lg p-5">
+                        <h4 class="text-[10px] font-bold text-gray-400 uppercase mb-4 tracking-wider">Architecture Specification (A1_PROTOTYPE)</h4>
+                        <div class="grid md:grid-cols-2 gap-x-12 gap-y-4">
+                            <div class="space-y-3">
+                                <div class="flex justify-between text-xs border-b border-gray-200 pb-1">
+                                    <span class="text-gray-500 font-mono">Hidden Layers</span>
+                                    <span class="font-semibold">8 Layers</span>
+                                </div>
+                                <div class="flex justify-between text-xs border-b border-gray-200 pb-1">
+                                    <span class="text-gray-500 font-mono">Attention</span>
+                                    <span class="font-semibold">Multi-Head (GQA Ready)</span>
+                                </div>
+                                <div class="flex justify-between text-xs border-b border-gray-200 pb-1">
+                                    <span class="text-gray-500 font-mono">Norm Method</span>
+                                    <span class="font-semibold">RMSNorm</span>
+                                </div>
+                            </div>
+                            <div class="space-y-3">
+                                <div class="flex justify-between text-xs border-b border-gray-200 pb-1">
+                                    <span class="text-gray-500 font-mono">Positioning</span>
+                                    <span class="font-semibold">Rotary Embedding (RoPE)</span>
+                                </div>
+                                <div class="flex justify-between text-xs border-b border-gray-200 pb-1">
+                                    <span class="text-gray-500 font-mono">FeedForward</span>
+                                    <span class="font-semibold">Gated MLP (GLU)</span>
+                                </div>
+                                <div class="flex justify-between text-xs border-b border-gray-200 pb-1">
+                                    <span class="text-gray-500 font-mono">Vocabulary Size</span>
+                                    <span class="font-semibold">32,000 Tokens</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Card: Motif V1 (Removed Code Block) -->
             <div class="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden hover:shadow-md transition duration-300">
-                <!-- Card Header -->
-                <div class="p-8 pb-6 border-b border-gray-100">
+                <div class="p-8">
                     <div class="flex justify-between items-start mb-4">
                         <div>
                             <div class="flex items-center gap-3 mb-1">
                                 <h3 class="text-2xl font-bold text-gray-900">Motif V1</h3>
-                                <span class="px-2 py-0.5 bg-gray-100 text-gray-600 text-[10px] font-mono rounded border border-gray-200">STABLE</span>
+                                <span class="px-2 py-0.5 bg-gray-100 text-gray-600 text-[10px] font-mono rounded border border-gray-200">VISION</span>
                             </div>
-                            <p class="text-sm text-gray-500">Foundational Representation / Vision</p>
+                            <p class="text-sm text-gray-500">Visual Representation & Compression</p>
                         </div>
-                        <div class="text-right hidden md:block">
-                            <span class="block text-xs text-gray-400 font-mono">BUILD 2026.01</span>
-                        </div>
+                        <span class="text-xs text-blue-600 bg-blue-50 px-2 py-1 rounded font-mono">STABLE</span>
                     </div>
-                    <p class="text-gray-600 text-sm leading-relaxed max-w-3xl">
-                        Codon Motif 体系的首个验证单元。通过深度卷积与注意力机制的混合架构，实现对视觉信号的高效压缩与表征。
-                        为后续意识模型的感知层奠定基础。
+                    <p class="text-gray-600 text-sm leading-relaxed max-w-2xl mb-8">
+                        Codon Motif 体系的首个验证单元。结合深度卷积与感知注意力机制，实现对视觉信号的高效压缩。通过非线性空间映射，将复杂视觉像素转化为具有语义特征的连续向量空间。
                     </p>
-                </div>
-
-                <!-- Technical Deep Dive (灰色背景区域) -->
-                <div class="bg-gray-50 px-8 py-6">
-                    <h4 class="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-4">Architecture Overview</h4>
-                    <div class="grid md:grid-cols-2 gap-6">
-                        <!-- Left Column: Specs -->
-                        <div class="space-y-3 font-mono text-xs text-gray-600">
-                            <div class="flex justify-between border-b border-gray-200 border-dashed pb-1">
-                                <span>Core</span>
-                                <span class="text-gray-900">VQGAN-like + Attention</span>
-                            </div>
-                            <div class="flex justify-between border-b border-gray-200 border-dashed pb-1">
-                                <span>Positional Enc</span>
-                                <span class="text-gray-900">MRoPE Interleaved</span>
-                            </div>
-                            <div class="flex justify-between border-b border-gray-200 border-dashed pb-1">
-                                <span>Quantization</span>
-                                <span class="text-gray-900">LFQ (Lookup Free)</span>
-                            </div>
+                    
+                    <div class="grid grid-cols-2 md:grid-cols-3 gap-6 pt-6 border-t border-gray-50">
+                        <div>
+                            <p class="text-[10px] text-gray-400 uppercase font-bold mb-1">Core Tech</p>
+                            <p class="text-xs font-mono text-gray-700">VQ-Encoder</p>
                         </div>
-
-                        <!-- Right Column: Layers Preview (模拟代码结构) -->
-                        <div class="font-mono text-[10px] leading-tight text-gray-500 bg-white p-3 rounded border border-gray-200">
-                            <div class="text-blue-600">MotifV1(</div>
-                            <div class="pl-2">  (encoder): <span class="text-gray-800">ConvBlock + ResBasicBlock</span></div>
-                            <div class="pl-2">  (mid_attn): <span class="text-gray-800">SpatialMultiHeadAttention</span></div>
-                            <div class="pl-4 text-gray-400">    -> rope: MRoPEInterleavedEmbedding</div>
-                            <div class="pl-2">  (quantizer): <span class="text-purple-600">LFQ</span> (14 -> 256)</div>
-                            <div class="pl-2">  (decoder): <span class="text-gray-800">PixelShuffle Upsample</span></div>
-                            <div class="text-blue-600">)</div>
+                        <div>
+                            <p class="text-[10px] text-gray-400 uppercase font-bold mb-1">Positioning</p>
+                            <p class="text-xs font-mono text-gray-700">MRoPE Interleaved</p>
+                        </div>
+                        <div>
+                            <p class="text-[10px] text-gray-400 uppercase font-bold mb-1">Quantization</p>
+                            <p class="text-xs font-mono text-gray-700">Lookup Free (LFQ)</p>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <!-- Card: Motif M1 -->
-            <div class="group bg-white p-8 rounded-xl border border-gray-200 border-dashed relative overflow-hidden transition-all hover:border-blue-200 hover:bg-blue-50/10">
-                <div class="flex flex-col md:flex-row justify-between items-start mb-4 gap-4">
-                    <div>
-                        <h3 class="text-xl font-bold text-gray-900 group-hover:text-blue-700 transition-colors">Motif M1</h3>
-                        <p class="text-sm text-gray-500 mt-1 group-hover:text-blue-600/70">Multimodal Translation / Alignment</p>
-                    </div>
-                    <span class="flex items-center gap-1.5 text-[10px] font-mono text-blue-600 bg-blue-50 px-2 py-1 rounded-full border border-blue-100">
-                        <span class="relative flex h-1.5 w-1.5">
-                          <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-400 opacity-75"></span>
-                          <span class="relative inline-flex rounded-full h-1.5 w-1.5 bg-blue-500"></span>
-                        </span>
-                        RESEARCHING
-                    </span>
-                </div>
-                <p class="text-gray-600 text-sm leading-relaxed max-w-2xl mb-6">
-                    Motif M1 旨在测试视觉表征与语言符号的深层映射。
-                    该模型将验证跨模态的通用语义空间。
-                </p>
-                <div class="flex items-center gap-2 text-xs font-mono text-gray-400">
-                    <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.384-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z"></path></svg>
-                    <span>Experimenting with Contrastive Loss</span>
-                </div>
-            </div>
         </div>
     </section>
 
     <!-- Footer -->
-    <footer class="mt-auto py-8 px-6 border-t border-gray-200 bg-white">
-        <div class="max-w-4xl mx-auto flex flex-col md:flex-row justify-between items-center text-xs text-gray-400">
-            <div class="mb-2 md:mb-0">
-                &copy; 2026 Codon Lab.
+    <footer class="mt-auto py-10 px-6 border-t border-gray-200 bg-white">
+        <div class="max-w-4xl mx-auto flex flex-col md:flex-row justify-between items-center text-[11px] text-gray-400 font-mono uppercase tracking-widest">
+            <div class="mb-4 md:mb-0">
+                &copy; 2026 Codon Laboratory. All rights reserved.
+            </div>
+            <div class="flex gap-6">
+                <!-- <a href="#" class="hover:text-black transition">Twitter / X</a> -->
+                <a href="https://github.com/CodonTeam" class="hover:text-black transition">Github</a>
             </div>
         </div>
     </footer>
 
+    <script>
+        const btn = document.getElementById('menu-toggle');
+        const menu = document.getElementById('mobile-menu');
+        const icon = document.getElementById('menu-icon');
+
+        btn.addEventListener('click', () => {
+            menu.classList.toggle('open');
+            if (menu.classList.contains('open')) {
+                icon.setAttribute('d', 'M6 18L18 6M6 6l12 12');
+            } else {
+                icon.setAttribute('d', 'M4 6h16M4 12h16m-7 6h7');
+            }
+        });
+    </script>
 </body>
 </html>
