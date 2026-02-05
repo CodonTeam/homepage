@@ -10,9 +10,9 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
     <style>
-        /* DVH Support: 解决移动端地址栏遮挡问题 */
+        /* DVH Support */
         .h-screen-dvh {
-            height: 100vh; /* Fallback */
+            height: 100vh;
             height: 100dvh;
         }
 
@@ -230,7 +230,6 @@
         textarea:focus { outline: none !important; box-shadow: none !important; }
     </style>
 </head>
-<!-- 使用 h-screen-dvh 替代 h-screen -->
 <body class="grid-bg h-screen-dvh flex flex-col overflow-hidden">
 
     <nav class="w-full glass-card flex-shrink-0 z-50">
@@ -275,6 +274,14 @@
                                 <span id="val-temp" class="text-[10px] font-mono text-gray-900">0.7</span>
                             </div>
                             <input type="range" id="setting-temp" min="0" max="2" step="0.1" class="w-full h-1 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-blue-600">
+                        </div>
+                        <!-- Top P Slider 回归 -->
+                        <div>
+                            <div class="flex justify-between mb-1">
+                                <label class="text-[10px] font-medium text-gray-500">核采样 (Top P)</label>
+                                <span id="val-topp" class="text-[10px] font-mono text-gray-900">0.9</span>
+                            </div>
+                            <input type="range" id="setting-topp" min="0" max="1" step="0.05" class="w-full h-1 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-blue-600">
                         </div>
                     </div>
                 </div>
@@ -334,9 +341,25 @@
 
     <script>
         const renderer = new marked.Renderer();
+        
+        // 修复表格渲染：兼容 Marked 新旧版本的参数差异 (修复 [object Object]undefined)
         renderer.table = function(header, body) {
-            return `<div class="table-container"><table><thead>${header}</thead><tbody>${body}</tbody></table></div>`;
+            let h = header;
+            let b = body;
+            
+            // 检测是否收到了对象形式的参数 (Marked v12+ token)
+            if (typeof header === 'object' && header !== null && !body) {
+                h = header.header;
+                b = header.body;
+            }
+            
+            // 安全回退：如果解析出来不是字符串，确保不崩溃
+            if (!h) h = '';
+            if (!b) b = '';
+
+            return `<div class="table-container"><table><thead>${h}</thead><tbody>${b}</tbody></table></div>`;
         };
+
         marked.setOptions({
             renderer: renderer,
             breaks: true,
@@ -352,6 +375,7 @@
             apiKey: '',
             modelId: 'motif_a1',
             temperature: 0.7,
+            topP: 0.9,
             cotMode: 'auto'
         };
 
@@ -362,7 +386,9 @@
             key: document.getElementById('setting-key'),
             model: document.getElementById('setting-model'),
             temp: document.getElementById('setting-temp'),
+            topp: document.getElementById('setting-topp'), // Top P 元素
             valTemp: document.getElementById('val-temp'),
+            valTopp: document.getElementById('val-topp'), // Top P Value
             saveBtn: document.getElementById('save-settings'),
             labelModel: document.getElementById('current-model-label'),
             container: document.getElementById('chat-container'),
@@ -394,13 +420,13 @@
             let hasChanges = false;
             const mappings = {
                 'base_url': 'baseUrl', 'api_key': 'apiKey', 'model': 'modelId',
-                'temp': 'temperature', 'cot': 'cotMode'
+                'temp': 'temperature', 'top_p': 'topP', 'cot': 'cotMode'
             };
 
             for (const [urlKey, settingsKey] of Object.entries(mappings)) {
                 if (urlParams.has(urlKey)) {
                     let val = urlParams.get(urlKey);
-                    if (['temperature'].includes(settingsKey)) val = parseFloat(val);
+                    if (['temperature', 'topP'].includes(settingsKey)) val = parseFloat(val);
                     currentSettings[settingsKey] = val;
                     hasChanges = true;
                 }
@@ -415,7 +441,9 @@
             els.key.value = currentSettings.apiKey;
             els.model.value = currentSettings.modelId;
             els.temp.value = currentSettings.temperature;
+            els.topp.value = currentSettings.topP; // 初始化 Top P
             els.valTemp.innerText = els.temp.value;
+            els.valTopp.innerText = els.topp.value; // 显示 Top P
             els.labelModel.innerText = currentSettings.modelId;
             
             updateCotUI(currentSettings.cotMode || 'auto');
@@ -429,12 +457,14 @@
                 els.settingsPanel.classList.add('hidden-panel'); 
         };
         els.temp.oninput = () => els.valTemp.innerText = els.temp.value;
+        els.topp.oninput = () => els.valTopp.innerText = els.topp.value; // Top P 监听
         els.saveBtn.onclick = () => {
             const s = getSettings();
             s.baseUrl = els.url.value || defaultSettings.baseUrl;
             s.apiKey = els.key.value;
             s.modelId = els.model.value || defaultSettings.modelId;
             s.temperature = parseFloat(els.temp.value);
+            s.topP = parseFloat(els.topp.value); // 保存 Top P
             localStorage.setItem('codon_settings', JSON.stringify(s));
             els.labelModel.innerText = s.modelId;
             els.settingsPanel.classList.add('hidden-panel');
@@ -605,6 +635,7 @@
                         model: s.modelId,
                         messages: messagesPayload,
                         temperature: s.temperature,
+                        top_p: s.topP,  // 发送 Top P
                         stream: true,
                         stream_options: { include_usage: true }
                     }),
