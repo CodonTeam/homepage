@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Model Lists - Codon Lab</title>
+    <title>Model Garden - Codon Lab</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
     <style>
@@ -21,23 +21,16 @@
             -webkit-backdrop-filter: blur(12px);
             border-bottom: 1px solid rgba(0, 0, 0, 0.05);
         }
-        /* Mobile Menu Transitions */
-        #mobile-menu {
-            transition: all 0.3s ease-in-out;
-            max-height: 0;
-            overflow: hidden;
-        }
-        #mobile-menu.open {
-            max-height: 300px; /* Adjust based on content */
-            padding-bottom: 1rem;
-        }
+        #mobile-menu { transition: all 0.3s ease-in-out; max-height: 0; overflow: hidden; }
+        #mobile-menu.open { max-height: 300px; padding-bottom: 1rem; }
     </style>
 </head>
 <body class="grid-bg min-h-screen flex flex-col">
 
     <!-- Responsive Nav -->
     <nav class="w-full glass-card sticky top-0 z-50">
-        <div class="max-w-6xl mx-auto px-6 py-4 flex justify-between items-center">
+        <!-- Unified Height: h-16 -->
+        <div class="max-w-6xl mx-auto px-6 h-16 flex justify-between items-center">
             <a href="/" class="text-lg font-semibold tracking-tight flex items-center gap-2 text-gray-900 group">
                 <div class="w-2.5 h-2.5 bg-blue-600 rounded-sm group-hover:bg-blue-700 transition"></div>
                 Codon Lab
@@ -45,9 +38,9 @@
             
             <!-- Desktop Menu -->
             <div class="hidden md:flex gap-8 text-sm font-medium text-gray-500">
-                <a href="/models" class="text-black transition">Models</a>
-                <a href="/profle" class="hover:text-black transition">Team</a>
-                <a href="https://github.com/CodonTeam" target="_blank" class="hover:text-black transition">Github</a>
+                <a href="/models" class="text-black transition">模型库</a>
+                <a href="/profile" class="hover:text-black transition">团队</a>
+                <a href="https://github.com/CodonTeam" target="_blank" class="hover:text-black transition">GitHub</a>
             </div>
 
             <!-- Mobile Toggle -->
@@ -59,9 +52,9 @@
         <!-- Mobile Drawer -->
         <div id="mobile-menu" class="md:hidden px-6 bg-white/50 border-b border-gray-100/50">
             <div class="flex flex-col gap-3 pb-4 pt-2 text-sm font-medium text-gray-600">
-                <a href="/models" class="py-2 border-b border-gray-100 text-blue-600">Models</a>
-                <a href="/profile" class="py-2 border-b border-gray-100">Team</a>
-                <a href="https://github.com/CodonTeam" target="_blank" class="py-2">Github</a>
+                <a href="/models" class="py-2 border-b border-gray-100 text-blue-600">模型库</a>
+                <a href="/profile" class="py-2 border-b border-gray-100">团队</a>
+                <a href="https://github.com/CodonTeam" target="_blank" class="py-2">GitHub</a>
             </div>
         </div>
     </nav>
@@ -69,10 +62,10 @@
     <main class="max-w-5xl mx-auto w-full px-6 py-16">
         
         <header class="mb-16">
-            <h1 class="text-3xl md:text-4xl font-semibold text-gray-900 mb-4">Model Garden</h1>
+            <h1 class="text-3xl md:text-4xl font-semibold text-gray-900 mb-4">模型矩阵</h1>
             <p class="text-gray-600 max-w-2xl font-light leading-relaxed">
                 Codon Lab 的模型库分为两类：用于专项技术验证的 
-                <span class="font-medium text-gray-900">Motif 系列</span>，
+                <span class="font-medium text-gray-900">Motif (模体) 系列</span>，
                 以及未来集成的 <span class="font-medium text-gray-900">Codon 正式版系列</span>。
             </p>
         </header>
@@ -80,36 +73,35 @@
         <!-- SECTION 1: MOTIF SERIES -->
         <section class="mb-20">
             <div class="flex items-center gap-3 mb-8">
-                <h2 class="text-xl font-bold text-gray-900">Validation Series</h2>
+                <h2 class="text-xl font-bold text-gray-900">验证序列</h2>
                 <span class="px-2 py-0.5 bg-blue-50 text-blue-700 text-[10px] font-mono rounded border border-blue-100 uppercase tracking-wide">Motif Codes</span>
             </div>
 
             <div class="grid md:grid-cols-2 gap-6">
                 
-                <!-- Motif A1 (Now Active) -->
+                <!-- Motif A1 -->
                 <div class="bg-white rounded-xl border border-blue-200 p-6 shadow-sm hover:shadow-md hover:border-blue-300 transition duration-300 relative overflow-hidden">
-                    <!-- Background Decoration -->
                     <div class="absolute top-0 right-0 w-20 h-20 bg-blue-50 rounded-bl-full -mr-4 -mt-4 z-0"></div>
                     
                     <div class="relative z-10">
                         <div class="flex justify-between items-start mb-4">
                             <div class="flex items-center gap-2">
                                 <h3 class="text-lg font-bold text-gray-900">Motif A1</h3>
-                                <span class="text-[10px] bg-blue-50 text-blue-700 px-2 py-1 rounded font-mono border border-blue-100">LANGUAGE</span>
+                                <span class="text-[10px] bg-blue-50 text-blue-700 px-2 py-1 rounded font-mono border border-blue-100">语言</span>
                             </div>
                             <span class="flex items-center gap-1.5 text-[10px] text-blue-600 font-mono font-medium">
                                 <span class="relative flex h-2 w-2">
                                   <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-400 opacity-75"></span>
                                   <span class="relative inline-flex rounded-full h-2 w-2 bg-blue-500"></span>
                                 </span>
-                                ACTIVE
+                                活跃
                             </span>
                         </div>
                         <p class="text-sm text-gray-600 mb-8 h-10 line-clamp-2 leading-relaxed">
                             基于 Transformer Decoder 的因果语言模型。验证 RoPE 与 Gated MLP 在逻辑推理中的效率。
                         </p>
                         <a href="/motif/a1" class="inline-flex items-center justify-center w-full py-2.5 bg-gray-900 text-white text-sm font-medium rounded-lg hover:bg-black transition shadow-lg shadow-gray-200/50">
-                            Explore Architecture
+                            查看架构详情
                         </a>
                     </div>
                 </div>
@@ -119,7 +111,7 @@
                     <div class="flex justify-between items-start mb-4">
                         <div class="flex items-center gap-2">
                             <h3 class="text-lg font-bold text-gray-900">Motif V1</h3>
-                            <span class="text-[10px] bg-green-50 text-green-700 px-2 py-1 rounded font-mono border border-green-100">VISION</span>
+                            <span class="text-[10px] bg-green-50 text-green-700 px-2 py-1 rounded font-mono border border-green-100">视觉</span>
                         </div>
                         <span class="text-xs text-gray-400 font-mono">v1.0.0</span>
                     </div>
@@ -127,17 +119,17 @@
                         基于 VQ-GAN + LFQ 的视觉压缩单元。用于构建意识模型的感知输入层。
                     </p>
                     <a href="/motif/v1" class="inline-flex items-center justify-center w-full py-2.5 border border-gray-200 bg-gray-50 text-gray-700 text-sm font-medium rounded-lg hover:bg-gray-100 hover:text-black transition">
-                        View Specs
+                        查看规格
                     </a>
                 </div>
 
             </div>
         </section>
 
-        <!-- SECTION 2: CODON SERIES (Planned) -->
+        <!-- SECTION 2: CODON SERIES -->
         <section>
             <div class="flex items-center gap-3 mb-8">
-                <h2 class="text-xl font-bold text-gray-900">Formal Series</h2>
+                <h2 class="text-xl font-bold text-gray-900">正式序列</h2>
                 <span class="px-2 py-0.5 bg-gray-100 text-gray-600 text-[10px] font-mono rounded border border-gray-200 uppercase tracking-wide">The Goal</span>
             </div>
 
@@ -147,22 +139,37 @@
                     <table class="w-full text-left text-sm whitespace-nowrap md:whitespace-normal">
                         <thead class="bg-gray-50 border-b border-gray-200 font-mono text-xs text-gray-500 uppercase">
                             <tr>
-                                <th class="px-6 py-4 font-medium">Model</th>
-                                <th class="px-6 py-4 font-medium w-full">Target Description</th>
-                                <th class="px-6 py-4 font-medium text-right">Status</th>
+                                <th class="px-6 py-4 font-medium">型号</th>
+                                <th class="px-6 py-4 font-medium w-full">目标描述</th>
+                                <th class="px-6 py-4 font-medium text-right">状态</th>
                             </tr>
                         </thead>
                         <tbody class="divide-y divide-gray-100">
+                            <!-- Codon Pico -->
                             <tr class="group hover:bg-gray-50 transition">
                                 <td class="px-6 py-4 font-mono font-medium text-gray-900">Codon Pico</td>
                                 <td class="px-6 py-4 text-gray-600">极简架构验证版，用于学术开源社区。</td>
                                 <td class="px-6 py-4 text-right text-[10px] text-gray-400 font-mono bg-gray-50/50">PLANNED</td>
                             </tr>
+
+                            <!-- Codon Nano -->
                             <tr class="group hover:bg-gray-50 transition">
                                 <td class="px-6 py-4 font-mono font-medium text-gray-900">Codon Nano</td>
-                                <td class="px-6 py-4 text-gray-600">端侧运行的轻量级助手 (< 3B)。</td>
+                                <td class="px-6 py-4 text-gray-600">端侧运行的通用助手 (< 3B)，平衡能耗与性能。</td>
                                 <td class="px-6 py-4 text-right text-[10px] text-gray-400 font-mono bg-gray-50/50">PLANNED</td>
                             </tr>
+
+                            <!-- Codon Flash (NEW) -->
+                            <tr class="group hover:bg-gray-50 transition border-l-2 border-transparent hover:border-blue-500">
+                                <td class="px-6 py-4 font-mono font-medium text-gray-900 inline-flex items-center gap-2">
+                                    Codon Flash
+                                    <span class="px-1.5 py-0.5 rounded text-[9px] bg-yellow-100 text-yellow-700 font-bold">FAST</span>
+                                </td>
+                                <td class="px-6 py-4 text-gray-600">高吞吐量轻量级模型，专为快速推理与实时交互设计。</td>
+                                <td class="px-6 py-4 text-right text-[10px] text-gray-400 font-mono bg-gray-50/50">PLANNED</td>
+                            </tr>
+
+                            <!-- Codon Max -->
                             <tr class="group hover:bg-gray-50 transition opacity-60">
                                 <td class="px-6 py-4 font-mono font-medium text-gray-900">Codon Max</td>
                                 <td class="px-6 py-4 text-gray-600">全能力旗舰模型，具备复杂长链推理能力。</td>

@@ -2,12 +2,20 @@
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>推理终端 - Codon Lab</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
     <style>
+        /* DVH Support: 解决移动端地址栏遮挡问题 */
+        .h-screen-dvh {
+            height: 100vh; /* Fallback */
+            height: 100dvh;
+        }
+
         body { font-family: 'Inter', sans-serif; background-color: #fafafa; color: #171717; }
         .font-mono { font-family: 'JetBrains Mono', monospace; }
         .grid-bg {
@@ -27,7 +35,7 @@
         .message-row {
             display: flex;
             width: 100%;
-            margin-bottom: 2rem;
+            margin-bottom: 1.5rem;
             animation: fadeIn 0.3s ease-out;
         }
         
@@ -45,22 +53,24 @@
             font-size: 0.95rem;
             line-height: 1.6;
             box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+            overflow-wrap: break-word;
         }
 
         /* AI 消息 */
         .message-row.ai {
             justify-content: flex-start;
             flex-direction: column; 
-            max-width: 90%;
+            max-width: 92%;
         }
         .ai-card {
             background-color: #ffffff;
             border: 1px solid #e5e7eb;
             border-radius: 12px;
             border-bottom-left-radius: 2px;
-            padding: 1.5rem;
+            padding: 1.25rem;
             width: 100%;
             box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+            overflow: hidden;
         }
 
         /* 思考过程 */
@@ -68,7 +78,7 @@
             background-color: #f8fafc;
             border: 1px solid #e2e8f0;
             border-radius: 8px;
-            margin-bottom: 1.5rem;
+            margin-bottom: 1rem;
             overflow: hidden;
         }
         details.thought-process summary {
@@ -96,38 +106,98 @@
             max-height: 320px;
             overflow-y: auto;
             background-color: #fff;
+            word-wrap: break-word;
+            white-space: pre-wrap;
         }
 
         /* Markdown Styles */
-        .prose { max-width: none; color: #171717; font-size: 0.95rem; }
+        .prose {
+            max-width: none;
+            color: #171717;
+            font-size: 0.95rem;
+            line-height: 1.75;
+            word-wrap: break-word;
+            overflow-wrap: break-word;
+        }
+        .prose h1, .prose h2, .prose h3 { font-weight: 600; margin-top: 1.5rem; margin-bottom: 0.75rem; color: #111827; }
+        .prose h1 { font-size: 1.5rem; }
+        .prose h2 { font-size: 1.25rem; }
+        .prose h3 { font-size: 1.1rem; }
+        .prose p { margin-bottom: 0.75rem; }
+        .prose strong { color: #111827; font-weight: 600; }
+        .prose a { color: #2563eb; text-decoration: underline; }
+        .prose ul { list-style-type: disc; padding-left: 1.5rem; margin-bottom: 0.75rem; }
+        .prose ol { list-style-type: decimal; padding-left: 1.5rem; margin-bottom: 0.75rem; }
+        .prose li { margin-bottom: 0.25rem; }
+
         .prose pre {
-            background-color: #18181b;
-            color: #f4f4f5;
-            padding: 1rem;
+            background-color: #282c34;
+            color: #abb2bf;
+            padding: 0.75rem 1rem;
             border-radius: 0.5rem;
             font-family: 'JetBrains Mono', monospace;
             font-size: 0.85rem;
             overflow-x: auto;
             margin: 1rem 0;
-            border: 1px solid #27272a;
+            border: 1px solid #374151;
+            scrollbar-width: thin;
+            scrollbar-color: #4b5563 #282c34;
         }
-        .prose code {
+        .prose pre code {
+            background-color: transparent;
+            color: inherit;
+            padding: 0;
+            font-size: inherit;
+            word-break: normal;
+            white-space: pre;
+        }
+        .prose code:not(pre code) {
             font-family: 'JetBrains Mono', monospace;
-            background-color: rgba(37, 99, 235, 0.1);
+            background-color: rgba(37, 99, 235, 0.08);
             color: #2563eb;
-            padding: 0.1rem 0.3rem;
-            border-radius: 0.2rem;
-            font-size: 0.9em;
+            padding: 0.15rem 0.35rem;
+            border-radius: 0.25rem;
+            font-size: 0.85em;
             font-weight: 500;
+            white-space: pre-wrap;
+            word-break: break-all; 
         }
-        .prose pre code { background-color: transparent; color: inherit; padding: 0; }
-        .prose p { margin-bottom: 0.85rem; line-height: 1.75; }
-        .prose strong { color: #1e3a8a; font-weight: 600; }
 
-        /* Scrollbar & Cursor */
-        .thin-scrollbar::-webkit-scrollbar { width: 5px; height: 5px; }
+        .table-container {
+            width: 100%;
+            overflow-x: auto;
+            margin: 1rem 0;
+            border: 1px solid #e5e7eb;
+            border-radius: 0.5rem;
+        }
+        .prose table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.9rem;
+            white-space: nowrap;
+        }
+        .prose th {
+            background-color: #f9fafb;
+            font-weight: 600;
+            text-align: left;
+            padding: 0.75rem;
+            border-bottom: 1px solid #e5e7eb;
+        }
+        .prose td {
+            padding: 0.75rem;
+            border-bottom: 1px solid #f3f4f6;
+        }
+        .prose tr:last-child td { border-bottom: none; }
+        .prose tr:nth-child(even) { background-color: #fbfbfb; }
+        .prose hr { margin: 2rem 0; border: 0; border-top: 1px solid #e5e7eb; }
+        .prose blockquote { border-left: 4px solid #e5e7eb; padding-left: 1rem; font-style: italic; color: #6b7280; margin: 1rem 0; }
+
+        .thin-scrollbar::-webkit-scrollbar { width: 6px; height: 6px; }
         .thin-scrollbar::-webkit-scrollbar-track { background: transparent; }
         .thin-scrollbar::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 3px; }
+        .thin-scrollbar::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+        * { scrollbar-width: thin; scrollbar-color: #cbd5e1 transparent; }
+
         .cursor::after {
             content: '▋';
             display: inline-block;
@@ -140,12 +210,11 @@
         @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
         @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
 
-        /* UI States */
         .message-toolbar {
             opacity: 0;
             pointer-events: none;
             transition: opacity 0.3s ease;
-            margin-top: 0.5rem;
+            margin-top: 0.35rem;
             padding-left: 0.25rem;
         }
         .message-row.finished .message-toolbar { opacity: 1; pointer-events: auto; }
@@ -161,11 +230,11 @@
         textarea:focus { outline: none !important; box-shadow: none !important; }
     </style>
 </head>
-<body class="grid-bg h-screen flex flex-col overflow-hidden">
+<!-- 使用 h-screen-dvh 替代 h-screen -->
+<body class="grid-bg h-screen-dvh flex flex-col overflow-hidden">
 
-    <!-- Navbar -->
     <nav class="w-full glass-card flex-shrink-0 z-50">
-        <div class="max-w-6xl mx-auto px-6 py-4 md:py-5 flex justify-between items-center relative">
+        <div class="max-w-6xl mx-auto px-6 py-4 flex justify-between items-center relative h-16">
             <div class="flex items-center gap-4">
                 <a href="/" class="text-lg font-semibold tracking-tight flex items-center gap-2 text-gray-900 group">
                     <div class="w-2.5 h-2.5 bg-blue-600 rounded-sm group-hover:bg-blue-700 transition"></div>
@@ -207,13 +276,6 @@
                             </div>
                             <input type="range" id="setting-temp" min="0" max="2" step="0.1" class="w-full h-1 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-blue-600">
                         </div>
-                        <div>
-                            <div class="flex justify-between mb-1">
-                                <label class="text-[10px] font-medium text-gray-500">核采样 (Top P)</label>
-                                <span id="val-topp" class="text-[10px] font-mono text-gray-900">0.9</span>
-                            </div>
-                            <input type="range" id="setting-topp" min="0" max="1" step="0.05" class="w-full h-1 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-blue-600">
-                        </div>
                     </div>
                 </div>
 
@@ -222,7 +284,6 @@
         </div>
     </nav>
 
-    <!-- Chat Main -->
     <main id="chat-container" class="flex-grow overflow-y-auto scroll-smooth px-4 md:px-0 py-8 thin-scrollbar">
         <div class="max-w-3xl mx-auto min-h-[50vh]">
             
@@ -238,7 +299,6 @@
         </div>
     </main>
 
-    <!-- Input Area -->
     <footer class="flex-shrink-0 w-full glass-card z-40 pb-6 pt-2">
         <div class="max-w-3xl mx-auto px-4 md:px-0">
             <div id="input-wrapper" class="relative bg-white border border-gray-200 rounded-xl shadow-sm transition-all duration-200 flex flex-col p-2 group focus-within:ring-2 focus-within:ring-blue-100 focus-within:border-blue-400">
@@ -247,7 +307,6 @@
                 
                 <div class="flex justify-between items-center mt-2 px-1">
                     <div class="flex items-center gap-3">
-                        <!-- 新对话按钮 -->
                         <button id="new-chat-btn" class="flex items-center gap-1.5 text-[10px] font-medium text-gray-400 hover:text-red-500 transition px-2 py-1 rounded hover:bg-red-50" title="清空对话历史">
                             <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
                             <span class="hidden md:inline">清除上下文</span>
@@ -267,7 +326,6 @@
                     </button>
                 </div>
             </div>
-            
             <div class="text-center mt-3">
                 <p class="text-[10px] text-gray-400">Research Preview. 内容由 AI 生成，请仔细甄别。</p>
             </div>
@@ -275,12 +333,25 @@
     </footer>
 
     <script>
+        const renderer = new marked.Renderer();
+        renderer.table = function(header, body) {
+            return `<div class="table-container"><table><thead>${header}</thead><tbody>${body}</tbody></table></div>`;
+        };
+        marked.setOptions({
+            renderer: renderer,
+            breaks: true,
+            gfm: true,
+            highlight: function(code, language) {
+                const validLanguage = hljs.getLanguage(language) ? language : 'plaintext';
+                return hljs.highlight(code, { language: validLanguage }).value;
+            }
+        });
+
         const defaultSettings = {
             baseUrl: 'http://localhost:8000/v1',
             apiKey: '',
             modelId: 'motif_a1',
             temperature: 0.7,
-            topP: 0.9,
             cotMode: 'auto'
         };
 
@@ -291,9 +362,7 @@
             key: document.getElementById('setting-key'),
             model: document.getElementById('setting-model'),
             temp: document.getElementById('setting-temp'),
-            topp: document.getElementById('setting-topp'),
             valTemp: document.getElementById('val-temp'),
-            valTopp: document.getElementById('val-topp'),
             saveBtn: document.getElementById('save-settings'),
             labelModel: document.getElementById('current-model-label'),
             container: document.getElementById('chat-container'),
@@ -311,8 +380,6 @@
 
         let abortController = null;
         let isGenerating = false;
-        
-        // 核心状态：对话历史
         let chatHistory = []; 
 
         function getSettings() {
@@ -327,13 +394,13 @@
             let hasChanges = false;
             const mappings = {
                 'base_url': 'baseUrl', 'api_key': 'apiKey', 'model': 'modelId',
-                'temp': 'temperature', 'top_p': 'topP', 'cot': 'cotMode'
+                'temp': 'temperature', 'cot': 'cotMode'
             };
 
             for (const [urlKey, settingsKey] of Object.entries(mappings)) {
                 if (urlParams.has(urlKey)) {
                     let val = urlParams.get(urlKey);
-                    if (['temperature', 'topP'].includes(settingsKey)) val = parseFloat(val);
+                    if (['temperature'].includes(settingsKey)) val = parseFloat(val);
                     currentSettings[settingsKey] = val;
                     hasChanges = true;
                 }
@@ -348,9 +415,7 @@
             els.key.value = currentSettings.apiKey;
             els.model.value = currentSettings.modelId;
             els.temp.value = currentSettings.temperature;
-            els.topp.value = currentSettings.topP;
             els.valTemp.innerText = els.temp.value;
-            els.valTopp.innerText = els.topp.value;
             els.labelModel.innerText = currentSettings.modelId;
             
             updateCotUI(currentSettings.cotMode || 'auto');
@@ -358,21 +423,18 @@
         }
         init();
 
-        // UI Event Listeners
         els.settingsBtn.onclick = (e) => { e.stopPropagation(); els.settingsPanel.classList.toggle('hidden-panel'); };
         document.onclick = (e) => { 
             if(!els.settingsPanel.contains(e.target) && !els.settingsBtn.contains(e.target)) 
                 els.settingsPanel.classList.add('hidden-panel'); 
         };
         els.temp.oninput = () => els.valTemp.innerText = els.temp.value;
-        els.topp.oninput = () => els.valTopp.innerText = els.topp.value;
         els.saveBtn.onclick = () => {
             const s = getSettings();
             s.baseUrl = els.url.value || defaultSettings.baseUrl;
             s.apiKey = els.key.value;
             s.modelId = els.model.value || defaultSettings.modelId;
             s.temperature = parseFloat(els.temp.value);
-            s.topP = parseFloat(els.topp.value);
             localStorage.setItem('codon_settings', JSON.stringify(s));
             els.labelModel.innerText = s.modelId;
             els.settingsPanel.classList.add('hidden-panel');
@@ -400,7 +462,7 @@
 
         els.newChatBtn.onclick = () => {
             if (isGenerating && abortController) abortController.abort();
-            chatHistory = []; // 清空历史
+            chatHistory = []; 
             els.list.innerHTML = '';
             els.welcome.style.display = 'block';
             els.input.value = '';
@@ -425,7 +487,11 @@
             els.welcome.style.display = 'none';
             const row = document.createElement('div');
             row.className = 'message-row user';
-            row.innerHTML = `<div class="user-bubble text-left text-sm font-medium tracking-wide">${text.replace(/\n/g, '<br>')}</div>`;
+            const div = document.createElement('div');
+            div.className = 'user-bubble text-left text-sm font-medium tracking-wide';
+            div.textContent = text;
+            row.appendChild(div);
+            div.innerHTML = div.innerHTML.replace(/\n/g, '<br>');
             els.list.appendChild(row);
             scrollToBottom();
         }
@@ -436,7 +502,7 @@
             row.innerHTML = `
                 <div class="ai-card">
                     <div class="ai-thinking-container"></div>
-                    <div class="ai-content prose prose-sm cursor"></div>
+                    <div class="ai-content prose"></div>
                 </div>
                 <div class="message-toolbar flex gap-4 text-[10px] text-gray-400 select-none items-center">
                     <span class="token-usage hidden font-mono bg-gray-50 px-1 border border-gray-100 rounded text-gray-500"></span>
@@ -465,9 +531,7 @@
             const btnRegen = row.querySelector('.btn-regen');
             btnRegen.onclick = () => {
                 if (isGenerating) return;
-                
                 row.remove(); 
-                
                 if (chatHistory.length > 0 && chatHistory[chatHistory.length - 1].role === 'assistant') {
                     chatHistory.pop();
                 }
@@ -518,22 +582,16 @@
                 els.input.style.height = 'auto';
                 appendUserMessage(messageText);
                 chatHistory.push({ role: 'user', content: messageText });
-            } else {
-                // 重试逻辑：假设 chatHistory 最后一个是 User 消息
             }
 
             setGeneratingState(true);
             abortController = new AbortController();
 
             const ui = createAiMessage();
+            ui.content.classList.add('cursor');
             const s = getSettings();
             
-            // 构建请求 payload
             let messagesPayload = [...chatHistory];
-            if (s.cotMode === 'on') {
-                messagesPayload = [...messagesPayload];
-            }
-
             let accThinking = "";
             let accContent = "";
             let isThinking = false;
@@ -547,9 +605,8 @@
                         model: s.modelId,
                         messages: messagesPayload,
                         temperature: s.temperature,
-                        top_p: s.topP,
                         stream: true,
-                        stream_options: { include_usage: true } // 显式请求 usage
+                        stream_options: { include_usage: true }
                     }),
                     signal: abortController.signal
                 });
@@ -571,7 +628,6 @@
                             try {
                                 const data = JSON.parse(line.slice(6));
                                 
-                                // 处理 Usage
                                 if (data.usage) {
                                     ui.tokenDisplay.textContent = `Tokens: ${data.usage.total_tokens}`;
                                     ui.tokenDisplay.classList.remove('hidden');
@@ -612,7 +668,6 @@
                     if (ui.content) scrollToBottom();
                 }
                 
-                // 将 AI 回复计入历史
                 chatHistory.push({ role: 'assistant', content: accContent });
 
             } catch (err) {

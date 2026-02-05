@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Motif A1 Specs - Codon Lab</title>
+    <title>Motif A1 规格详情 - Codon Lab</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
     <style>
@@ -21,65 +21,34 @@
             -webkit-backdrop-filter: blur(12px);
             border-bottom: 1px solid rgba(0, 0, 0, 0.05);
         }
-        
         /* Code Block Styling */
         .code-window {
-            background-color: #0f1115; /* Dark Navy for A1 */
+            background-color: #0f1115;
             border-radius: 0.5rem;
             overflow: hidden;
             border: 1px solid #1f2937;
         }
-        .code-header {
-            background-color: #1a202c;
-            padding: 0.5rem 1rem;
-            display: flex;
-            align-items: center;
-            border-bottom: 1px solid #2d3748;
-        }
         .code-content {
-            color: #e2e8f0;
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 0.75rem;
-            line-height: 1.6;
-            padding: 1.25rem;
-            overflow-x: auto;
-            white-space: pre-wrap; 
-            word-break: break-all;
+            color: #e2e8f0; font-family: 'JetBrains Mono', monospace;
+            font-size: 0.75rem; line-height: 1.6; padding: 1.25rem;
+            overflow-x: auto; white-space: pre-wrap; word-break: break-all;
         }
-        
-        /* Syntax Highlighting */
-        .hl-cls { color: #60a5fa; font-weight: bold; } /* Blue for Classes */
-        .hl-attr { color: #93c5fd; } 
-        .hl-num { color: #f87171; } 
-        .hl-str { color: #34d399; } 
-        .hl-kw { color: #c084fc; } /* Purple for keywords */
-        .hl-comment { color: #6b7280; font-style: italic; } 
-        
-        .flow-arrow {
-            color: #cbd5e1; 
-            font-size: 1.25rem;
-        }
-        @media (max-width: 768px) {
-            .flow-arrow { transform: rotate(90deg); margin: 0.5rem 0; }
-        }
-
-        /* Mobile Menu */
-        #mobile-menu {
-            transition: all 0.3s ease-in-out;
-            max-height: 0;
-            overflow: hidden;
-        }
-        #mobile-menu.open {
-            max-height: 200px;
-            padding-bottom: 1rem;
-        }
+        .hl-cls { color: #60a5fa; font-weight: bold; }
+        .hl-attr { color: #93c5fd; } .hl-num { color: #f87171; }
+        .hl-str { color: #34d399; } .hl-kw { color: #c084fc; }
+        .hl-comment { color: #6b7280; font-style: italic; }
+        .flow-arrow { color: #cbd5e1; font-size: 1.25rem; }
+        @media (max-width: 768px) { .flow-arrow { transform: rotate(90deg); margin: 0.5rem 0; } }
+        #mobile-menu { transition: all 0.3s ease-in-out; max-height: 0; overflow: hidden; }
+        #mobile-menu.open { max-height: 200px; padding-bottom: 1rem; }
     </style>
 </head>
 <body class="grid-bg min-h-screen flex flex-col">
 
     <!-- Responsive Nav -->
     <nav class="w-full glass-card sticky top-0 z-50">
-        <div class="max-w-6xl mx-auto px-6 py-4 flex justify-between items-center">
+        <!-- Unified Height: h-16 -->
+        <div class="max-w-6xl mx-auto px-6 h-16 flex justify-between items-center">
             <a href="/" class="text-lg font-semibold tracking-tight flex items-center gap-2 text-gray-900">
                 <div class="w-2.5 h-2.5 bg-blue-600 rounded-sm"></div>
                 Codon Lab
@@ -88,7 +57,7 @@
             <div class="hidden md:flex gap-4 text-sm font-medium text-gray-500">
                 <a href="/models" class="hover:text-black transition flex items-center gap-1">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
-                    Back to Models
+                    返回模型库
                 </a>
             </div>
 
@@ -101,7 +70,7 @@
         <div id="mobile-menu" class="md:hidden px-6 bg-white/50 border-b border-gray-100/50">
             <div class="flex flex-col py-2 text-sm font-medium text-gray-600">
                 <a href="/models" class="py-2 flex items-center gap-2">
-                    <span>←</span> Back to Models
+                    <span>←</span> 返回模型库
                 </a>
             </div>
         </div>
@@ -124,11 +93,11 @@
 
             <div class="space-y-5 text-sm">
                 <div>
-                    <span class="block text-gray-400 text-xs uppercase font-bold tracking-wider mb-1">Architecture</span>
+                    <span class="block text-gray-400 text-xs uppercase font-bold tracking-wider mb-1">架构</span>
                     <span class="font-mono text-gray-700">Transformer Decoder (Causal)</span>
                 </div>
                 <div>
-                    <span class="block text-gray-400 text-xs uppercase font-bold tracking-wider mb-1">Key Features</span>
+                    <span class="block text-gray-400 text-xs uppercase font-bold tracking-wider mb-1">关键特性</span>
                     <ul class="font-mono text-gray-700 text-xs space-y-1">
                         <li>• Rotary Embeddings (RoPE)</li>
                         <li>• Gated MLP (SwiGLU)</li>
@@ -136,18 +105,18 @@
                     </ul>
                 </div>
                 <div>
-                    <span class="block text-gray-400 text-xs uppercase font-bold tracking-wider mb-1">Context Window</span>
+                    <span class="block text-gray-400 text-xs uppercase font-bold tracking-wider mb-1">上下文窗口</span>
                     <span class="font-mono text-gray-700">2048 Tokens (Base)</span>
                 </div>
                 <div>
-                    <span class="block text-gray-400 text-xs uppercase font-bold tracking-wider mb-1">Framework</span>
+                    <span class="block text-gray-400 text-xs uppercase font-bold tracking-wider mb-1">框架</span>
                     <span class="font-mono text-gray-700">PyTorch / Orbit</span>
                 </div>
             </div>
 
             <div class="pt-6 border-t border-gray-200">
                 <button disabled class="block w-full text-center py-2 bg-gray-100 text-gray-400 text-sm font-medium rounded-lg cursor-not-allowed mb-2">
-                    HF Weights (Coming Soon)
+                    HF 权重下载 (即将推出)
                 </button>
             </div>
         </aside>
@@ -163,9 +132,9 @@
                 </p>
             </div>
 
-            <!-- 2. Data Flow (LLM Style) -->
+            <!-- 2. Data Flow -->
             <div>
-                <h2 class="text-lg font-bold text-gray-900 mb-6">Pipeline Logic</h2>
+                <h2 class="text-lg font-bold text-gray-900 mb-6">数据流逻辑</h2>
                 <div class="bg-white p-6 rounded-xl border border-gray-200">
                     <div class="flex flex-col md:flex-row items-center justify-between text-xs font-mono text-gray-600 gap-3">
                         <div class="bg-gray-50 border border-gray-200 px-4 py-3 rounded text-center w-full md:w-auto">
@@ -179,7 +148,6 @@
                         <div class="bg-gray-900 text-white px-5 py-4 rounded text-center shadow-lg transform md:scale-110 w-full md:w-auto">
                             Decoder Layers<br>
                             <span class="text-[10px] text-gray-300 block mt-1">Attn (RoPE) + Gated MLP</span>
-                            <span class="text-[10px] text-gray-500">x Layers</span>
                         </div>
                         <span class="flow-arrow">→</span>
                         <div class="bg-blue-50 border border-blue-100 text-blue-700 px-4 py-3 rounded text-center w-full md:w-auto">
@@ -200,7 +168,7 @@
                     <div class="bg-white p-5 rounded-xl border border-gray-200">
                         <div class="flex items-center gap-2 mb-2">
                             <span class="w-2 h-2 bg-blue-500 rounded-full"></span>
-                            <span class="font-bold text-gray-900 text-sm">Attention Mechanism</span>
+                            <span class="font-bold text-gray-900 text-sm">注意力机制 (Attention)</span>
                         </div>
                         <p class="text-xs text-gray-600 leading-relaxed">
                             支持 <strong>GQA (Grouped Query Attention)</strong>。通过配置 <code>num_kv_heads</code> < <code>num_heads</code>，大幅减少 KV Cache 显存占用，提升推理可以支持的 Batch Size。
@@ -209,7 +177,7 @@
                     <div class="bg-white p-5 rounded-xl border border-gray-200">
                         <div class="flex items-center gap-2 mb-2">
                             <span class="w-2 h-2 bg-purple-500 rounded-full"></span>
-                            <span class="font-bold text-gray-900 text-sm">Positional Encoding</span>
+                            <span class="font-bold text-gray-900 text-sm">位置编码 (PE)</span>
                         </div>
                         <p class="text-xs text-gray-600 leading-relaxed">
                             采用 <strong>Rotary Embedding (RoPE)</strong>。将位置信息注入到 Query 和 Key 的旋转角度中，使得相对位置关系在注意力计算中自然保留。
@@ -218,7 +186,7 @@
                     <div class="bg-white p-5 rounded-xl border border-gray-200">
                         <div class="flex items-center gap-2 mb-2">
                             <span class="w-2 h-2 bg-green-500 rounded-full"></span>
-                            <span class="font-bold text-gray-900 text-sm">Feed Forward</span>
+                            <span class="font-bold text-gray-900 text-sm">前馈网络 (FFN)</span>
                         </div>
                         <p class="text-xs text-gray-600 leading-relaxed">
                             使用 <strong>Gated MLP</strong> (带有 Gate 机制的 MLP)。相比标准 MLP，提供了更强的非线性表达能力，通常配合 SiLU 激活函数。
@@ -227,10 +195,10 @@
                     <div class="bg-white p-5 rounded-xl border border-gray-200">
                         <div class="flex items-center gap-2 mb-2">
                             <span class="w-2 h-2 bg-orange-500 rounded-full"></span>
-                            <span class="font-bold text-gray-900 text-sm">Normalization</span>
+                            <span class="font-bold text-gray-900 text-sm">归一化 (Norm)</span>
                         </div>
                         <p class="text-xs text-gray-600 leading-relaxed">
-                            全链路使用 <strong>RMSNorm (Root Mean Square Layer Normalization)</strong>，去除了 LayerNorm 中的中心化操作，计算更高效且收敛更稳。
+                            全链路使用 <strong>RMSNorm</strong>，去除了 LayerNorm 中的中心化操作，计算更高效且收敛更稳。
                         </p>
                     </div>
                 </div>
@@ -238,7 +206,7 @@
 
             <!-- 4. Architecture Tree -->
             <div>
-                <h2 class="text-lg font-bold text-gray-900 mb-4">Module Hierarchy</h2>
+                <h2 class="text-lg font-bold text-gray-900 mb-4">模块层级</h2>
                 <div class="code-window">
                     <div class="code-content"><span class="hl-cls">A1Model</span>(
   (<span class="hl-attr">token_emb</span>): <span class="hl-cls">Embedding</span>(<span class="hl-num">32000</span>, <span class="hl-num">512</span>)
@@ -275,14 +243,12 @@
     </footer>
 
     <script>
-        // Simple Mobile Menu Toggle
         const btn = document.getElementById('menu-toggle');
         const menu = document.getElementById('mobile-menu');
         const icon = document.getElementById('menu-icon');
 
         btn.addEventListener('click', () => {
             menu.classList.toggle('open');
-            // Icon transition
             if (menu.classList.contains('open')) {
                 icon.setAttribute('d', 'M6 18L18 6M6 6l12 12');
             } else {
