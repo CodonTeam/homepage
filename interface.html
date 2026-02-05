@@ -921,7 +921,9 @@
                 ui.content.classList.remove('cursor');
                 ui.row.classList.add('finished');
                 setGeneratingState(false);
-                setTimeout(() => els.input.focus(), 100);
+                setTimeout(() => {
+                    if (window.innerWidth > 768) els.input.focus()
+                }, 100);
             }
         }
 
