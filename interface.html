@@ -1,14 +1,18 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>推理终端 - Codon Lab</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
     <style>
         /* DVH Support */
         .h-screen-dvh {
@@ -16,14 +20,23 @@
             height: 100dvh;
         }
 
-        body { font-family: 'Inter', sans-serif; background-color: #fafafa; color: #171717; }
-        .font-mono { font-family: 'JetBrains Mono', monospace; }
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #fafafa;
+            color: #171717;
+        }
+
+        .font-mono {
+            font-family: 'JetBrains Mono', monospace;
+        }
+
         .grid-bg {
             background-image: linear-gradient(#e5e5e5 1px, transparent 1px),
-            linear-gradient(90deg, #e5e5e5 1px, transparent 1px);
+                linear-gradient(90deg, #e5e5e5 1px, transparent 1px);
             background-size: 40px 40px;
             background-position: center top;
         }
+
         .glass-card {
             background: rgba(255, 255, 255, 0.9);
             backdrop-filter: blur(12px);
@@ -38,11 +51,12 @@
             margin-bottom: 1.5rem;
             animation: fadeIn 0.3s ease-out;
         }
-        
+
         /* 用户消息 */
         .message-row.user {
             justify-content: flex-end;
         }
+
         .user-bubble {
             background-color: #2563eb;
             color: white;
@@ -52,16 +66,17 @@
             max-width: 85%;
             font-size: 0.95rem;
             line-height: 1.6;
-            box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
             overflow-wrap: break-word;
         }
 
         /* AI 消息 */
         .message-row.ai {
             justify-content: flex-start;
-            flex-direction: column; 
+            flex-direction: column;
             max-width: 92%;
         }
+
         .ai-card {
             background-color: #ffffff;
             border: 1px solid #e5e7eb;
@@ -69,9 +84,19 @@
             border-bottom-left-radius: 2px;
             padding: 1.25rem;
             width: 100%;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
             overflow: hidden;
+            /* 添加过渡效果 */
+            transition: padding-bottom 0.2s ease;
         }
+
+        /* 关键修改：生成完成后，padding-bottom 设为 0 */
+        .message-row.finished .ai-card {
+            padding-bottom: 0;
+        }
+
+        /* 避免最后一个元素的 margin 导致视觉上过于空旷，或者因 padding=0 而太过紧凑
+           通常 prose 元素自带 margin-bottom，配合 padding-bottom: 0 效果较好 */
 
         /* 思考过程 */
         details.thought-process {
@@ -81,6 +106,7 @@
             margin-bottom: 1rem;
             overflow: hidden;
         }
+
         details.thought-process summary {
             padding: 0.5rem 0.75rem;
             font-size: 0.75rem;
@@ -93,9 +119,19 @@
             user-select: none;
             transition: background 0.2s;
         }
-        details.thought-process summary:hover { background-color: #f1f5f9; }
-        details.thought-process summary svg.arrow { transition: transform 0.2s; }
-        details.thought-process[open] summary svg.arrow { transform: rotate(180deg); }
+
+        details.thought-process summary:hover {
+            background-color: #f1f5f9;
+        }
+
+        details.thought-process summary svg.arrow {
+            transition: transform 0.2s;
+        }
+
+        details.thought-process[open] summary svg.arrow {
+            transform: rotate(180deg);
+        }
+
         details.thought-process div.thought-content {
             padding: 0.75rem 1rem;
             border-top: 1px solid #e2e8f0;
@@ -119,16 +155,57 @@
             word-wrap: break-word;
             overflow-wrap: break-word;
         }
-        .prose h1, .prose h2, .prose h3 { font-weight: 600; margin-top: 1.5rem; margin-bottom: 0.75rem; color: #111827; }
-        .prose h1 { font-size: 1.5rem; }
-        .prose h2 { font-size: 1.25rem; }
-        .prose h3 { font-size: 1.1rem; }
-        .prose p { margin-bottom: 0.75rem; }
-        .prose strong { color: #111827; font-weight: 600; }
-        .prose a { color: #2563eb; text-decoration: underline; }
-        .prose ul { list-style-type: disc; padding-left: 1.5rem; margin-bottom: 0.75rem; }
-        .prose ol { list-style-type: decimal; padding-left: 1.5rem; margin-bottom: 0.75rem; }
-        .prose li { margin-bottom: 0.25rem; }
+
+        .prose h1,
+        .prose h2,
+        .prose h3 {
+            font-weight: 600;
+            margin-top: 1.5rem;
+            margin-bottom: 0.75rem;
+            color: #111827;
+        }
+
+        .prose h1 {
+            font-size: 1.5rem;
+        }
+
+        .prose h2 {
+            font-size: 1.25rem;
+        }
+
+        .prose h3 {
+            font-size: 1.1rem;
+        }
+
+        .prose p {
+            margin-bottom: 0.75rem;
+        }
+
+        .prose strong {
+            color: #111827;
+            font-weight: 600;
+        }
+
+        .prose a {
+            color: #2563eb;
+            text-decoration: underline;
+        }
+
+        .prose ul {
+            list-style-type: disc;
+            padding-left: 1.5rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .prose ol {
+            list-style-type: decimal;
+            padding-left: 1.5rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .prose li {
+            margin-bottom: 0.25rem;
+        }
 
         .prose pre {
             background-color: #282c34;
@@ -143,6 +220,7 @@
             scrollbar-width: thin;
             scrollbar-color: #4b5563 #282c34;
         }
+
         .prose pre code {
             background-color: transparent;
             color: inherit;
@@ -151,6 +229,7 @@
             word-break: normal;
             white-space: pre;
         }
+
         .prose code:not(pre code) {
             font-family: 'JetBrains Mono', monospace;
             background-color: rgba(37, 99, 235, 0.08);
@@ -160,7 +239,7 @@
             font-size: 0.85em;
             font-weight: 500;
             white-space: pre-wrap;
-            word-break: break-all; 
+            word-break: break-all;
         }
 
         .table-container {
@@ -170,12 +249,14 @@
             border: 1px solid #e5e7eb;
             border-radius: 0.5rem;
         }
+
         .prose table {
             width: 100%;
             border-collapse: collapse;
             font-size: 0.9rem;
             white-space: nowrap;
         }
+
         .prose th {
             background-color: #f9fafb;
             font-weight: 600;
@@ -183,20 +264,56 @@
             padding: 0.75rem;
             border-bottom: 1px solid #e5e7eb;
         }
+
         .prose td {
             padding: 0.75rem;
             border-bottom: 1px solid #f3f4f6;
         }
-        .prose tr:last-child td { border-bottom: none; }
-        .prose tr:nth-child(even) { background-color: #fbfbfb; }
-        .prose hr { margin: 2rem 0; border: 0; border-top: 1px solid #e5e7eb; }
-        .prose blockquote { border-left: 4px solid #e5e7eb; padding-left: 1rem; font-style: italic; color: #6b7280; margin: 1rem 0; }
 
-        .thin-scrollbar::-webkit-scrollbar { width: 6px; height: 6px; }
-        .thin-scrollbar::-webkit-scrollbar-track { background: transparent; }
-        .thin-scrollbar::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 3px; }
-        .thin-scrollbar::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
-        * { scrollbar-width: thin; scrollbar-color: #cbd5e1 transparent; }
+        .prose tr:last-child td {
+            border-bottom: none;
+        }
+
+        .prose tr:nth-child(even) {
+            background-color: #fbfbfb;
+        }
+
+        .prose hr {
+            margin: 2rem 0;
+            border: 0;
+            border-top: 1px solid #e5e7eb;
+        }
+
+        .prose blockquote {
+            border-left: 4px solid #e5e7eb;
+            padding-left: 1rem;
+            font-style: italic;
+            color: #6b7280;
+            margin: 1rem 0;
+        }
+
+        .thin-scrollbar::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+
+        .thin-scrollbar::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        .thin-scrollbar::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 3px;
+        }
+
+        .thin-scrollbar::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+
+        * {
+            scrollbar-width: thin;
+            scrollbar-color: #cbd5e1 transparent;
+        }
 
         .cursor::after {
             content: '▋';
@@ -207,8 +324,30 @@
             margin-left: 2px;
             font-size: 0.9em;
         }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
-        @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(8px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes blink {
+
+            0%,
+            100% {
+                opacity: 1;
+            }
+
+            50% {
+                opacity: 0;
+            }
+        }
 
         .message-toolbar {
             opacity: 0;
@@ -217,7 +356,11 @@
             margin-top: 0.35rem;
             padding-left: 0.25rem;
         }
-        .message-row.finished .message-toolbar { opacity: 1; pointer-events: auto; }
+
+        .message-row.finished .message-toolbar {
+            opacity: 1;
+            pointer-events: auto;
+        }
 
         #settings-panel.hidden-panel {
             transform: translateY(-8px) scale(0.98);
@@ -225,11 +368,18 @@
             visibility: hidden;
             pointer-events: none;
         }
-        #settings-panel { transition: all 0.2s ease; }
 
-        textarea:focus { outline: none !important; box-shadow: none !important; }
+        #settings-panel {
+            transition: all 0.2s ease;
+        }
+
+        textarea:focus {
+            outline: none !important;
+            box-shadow: none !important;
+        }
     </style>
 </head>
+
 <body class="grid-bg h-screen-dvh flex flex-col overflow-hidden">
 
     <nav class="w-full glass-card flex-shrink-0 z-50">
@@ -240,23 +390,35 @@
                     Codon Lab <span class="text-gray-400 font-normal text-sm ml-1">/ 推理终端</span>
                 </a>
             </div>
-            
-            <button id="settings-btn" class="flex items-center gap-2 px-3 py-1.5 text-gray-500 hover:text-gray-900 hover:bg-white rounded-lg border border-transparent hover:border-gray-200 transition text-xs font-medium">
-                <span id="current-model-label" class="font-mono text-gray-600">motif_a1</span>
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
+
+            <button id="settings-btn"
+                class="flex items-center gap-2 px-3 py-1.5 text-gray-500 hover:text-gray-900 hover:bg-white rounded-lg border border-transparent hover:border-gray-200 transition text-xs font-medium">
+                <span id="current-model-label" class="font-mono text-gray-600 hidden sm:inline">motif_a1</span>
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z">
+                    </path>
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                </svg>
             </button>
 
-            <div id="settings-panel" class="hidden-panel absolute top-16 right-6 w-80 bg-white rounded-xl border border-gray-200 shadow-xl z-50 p-6 flex flex-col gap-5">
+            <div id="settings-panel"
+                class="hidden-panel absolute top-16 right-6 w-80 bg-white rounded-xl border border-gray-200 shadow-xl z-50 p-6 flex flex-col gap-5">
                 <div>
                     <h3 class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-3">连接配置</h3>
                     <div class="space-y-3">
                         <div>
                             <label class="block text-[10px] font-medium text-gray-500 mb-1">Base URL</label>
-                            <input type="text" id="setting-url" class="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-md text-xs font-mono focus:outline-none focus:border-blue-500 transition" placeholder="http://localhost:8000/v1">
+                            <input type="text" id="setting-url"
+                                class="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-md text-xs font-mono focus:outline-none focus:border-blue-500 transition"
+                                placeholder="http://localhost:8000/v1">
                         </div>
                         <div>
                             <label class="block text-[10px] font-medium text-gray-500 mb-1">API Key</label>
-                            <input type="password" id="setting-key" class="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-md text-xs font-mono focus:outline-none focus:border-blue-500 transition" placeholder="sk-...">
+                            <input type="password" id="setting-key"
+                                class="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-md text-xs font-mono focus:outline-none focus:border-blue-500 transition"
+                                placeholder="sk-...">
                         </div>
                     </div>
                 </div>
@@ -266,37 +428,46 @@
                     <div class="space-y-4">
                         <div>
                             <label class="block text-[10px] font-medium text-gray-500 mb-1">Model ID</label>
-                            <input type="text" id="setting-model" class="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-md text-xs font-mono focus:outline-none focus:border-blue-500 transition" placeholder="motif_a1">
+                            <input type="text" id="setting-model"
+                                class="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-md text-xs font-mono focus:outline-none focus:border-blue-500 transition"
+                                placeholder="motif_a1">
                         </div>
                         <div>
                             <div class="flex justify-between mb-1">
                                 <label class="text-[10px] font-medium text-gray-500">温度 (Temperature)</label>
                                 <span id="val-temp" class="text-[10px] font-mono text-gray-900">0.7</span>
                             </div>
-                            <input type="range" id="setting-temp" min="0" max="2" step="0.1" class="w-full h-1 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-blue-600">
+                            <input type="range" id="setting-temp" min="0" max="2" step="0.1"
+                                class="w-full h-1 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-blue-600">
                         </div>
-                        <!-- Top P Slider 回归 -->
                         <div>
                             <div class="flex justify-between mb-1">
                                 <label class="text-[10px] font-medium text-gray-500">核采样 (Top P)</label>
                                 <span id="val-topp" class="text-[10px] font-mono text-gray-900">0.9</span>
                             </div>
-                            <input type="range" id="setting-topp" min="0" max="1" step="0.05" class="w-full h-1 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-blue-600">
+                            <input type="range" id="setting-topp" min="0" max="1" step="0.05"
+                                class="w-full h-1 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-blue-600">
                         </div>
                     </div>
                 </div>
 
-                <button id="save-settings" class="w-full py-2.5 bg-gray-900 text-white text-xs font-medium rounded-lg hover:bg-black transition shadow-lg shadow-gray-200">保存配置</button>
+                <button id="save-settings"
+                    class="w-full py-2.5 bg-gray-900 text-white text-xs font-medium rounded-lg hover:bg-black transition shadow-lg shadow-gray-200">保存配置</button>
             </div>
         </div>
     </nav>
 
     <main id="chat-container" class="flex-grow overflow-y-auto scroll-smooth px-4 md:px-0 py-8 thin-scrollbar">
         <div class="max-w-3xl mx-auto min-h-[50vh]">
-            
+
             <div id="welcome-msg" class="text-center py-32 text-gray-300 select-none">
-                <div class="w-12 h-12 border border-blue-100 bg-blue-50/50 rounded-xl mx-auto mb-4 flex items-center justify-center shadow-sm">
-                    <svg class="w-6 h-6 text-blue-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.384-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z"></path></svg>
+                <div
+                    class="w-12 h-12 border border-blue-100 bg-blue-50/50 rounded-xl mx-auto mb-4 flex items-center justify-center shadow-sm">
+                    <svg class="w-6 h-6 text-blue-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+                            d="M19.428 15.428a2 2 0 00-1.022-.547l-2.384-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z">
+                        </path>
+                    </svg>
                 </div>
                 <h2 class="text-sm font-medium text-gray-500 mb-1">Codon Terminal</h2>
                 <p class="text-xs font-light">准备就绪</p>
@@ -306,34 +477,55 @@
         </div>
     </main>
 
-    <footer class="flex-shrink-0 w-full glass-card z-40 pb-6 pt-2">
+    <footer class="flex-shrink-0 w-full glass-card z-40 pb-1 pt-2">
         <div class="max-w-3xl mx-auto px-4 md:px-0">
-            <div id="input-wrapper" class="relative bg-white border border-gray-200 rounded-xl shadow-sm transition-all duration-200 flex flex-col p-2 group focus-within:ring-2 focus-within:ring-blue-100 focus-within:border-blue-400">
-                
-                <textarea id="user-input" rows="1" class="w-full bg-transparent border-none p-2 text-gray-900 placeholder-gray-400 resize-none no-scrollbar max-h-48 leading-relaxed text-sm font-sans outline-none focus:outline-none focus:ring-0" placeholder="发送消息给模型... (Shift+Enter 换行)"></textarea>
-                
+            <div id="input-wrapper"
+                class="relative bg-white border border-gray-200 rounded-xl shadow-sm transition-all duration-200 flex flex-col p-2 group focus-within:ring-2 focus-within:ring-blue-100 focus-within:border-blue-400">
+
+                <textarea id="user-input" rows="1"
+                    class="w-full bg-transparent border-none p-2 text-gray-900 placeholder-gray-400 resize-none no-scrollbar max-h-48 leading-relaxed text-sm font-sans outline-none focus:outline-none focus:ring-0"
+                    placeholder="发送消息给模型..."></textarea>
+
                 <div class="flex justify-between items-center mt-2 px-1">
-                    <div class="flex items-center gap-3">
-                        <button id="new-chat-btn" class="flex items-center gap-1.5 text-[10px] font-medium text-gray-400 hover:text-red-500 transition px-2 py-1 rounded hover:bg-red-50" title="清空对话历史">
-                            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
+                    <div class="flex items-center">
+                        <button id="new-chat-btn"
+                            class="flex items-center gap-1.5 text-[10px] font-medium text-gray-400 hover:text-red-500 transition px-2 py-1 rounded hover:bg-red-50"
+                            title="清空对话历史">
+                            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16">
+                                </path>
+                            </svg>
                             <span class="hidden md:inline">清除上下文</span>
                         </button>
 
                         <div class="h-4 w-px bg-gray-200 mx-1"></div>
 
-                        <button id="cot-toggle" class="flex items-center gap-1.5 text-[10px] font-medium text-gray-500 hover:text-gray-900 transition px-2 py-1 rounded hover:bg-gray-100">
-                            <svg id="cot-icon" class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path></svg>
+                        <button id="cot-toggle"
+                            class="flex items-center gap-1.5 text-[10px] font-medium text-gray-500 hover:text-gray-900 transition px-2 py-1 rounded hover:bg-gray-100">
+                            <svg id="cot-icon" class="w-3.5 h-3.5" fill="none" stroke="currentColor"
+                                viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z">
+                                </path>
+                            </svg>
                             <span id="cot-label">思考: 自动</span>
                         </button>
                     </div>
 
-                    <button id="send-btn" class="p-2 bg-gray-900 text-white rounded-lg hover:bg-black transition shadow flex items-center justify-center w-8 h-8 group-active:scale-95">
-                        <svg id="icon-send" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 12h14M12 5l7 7-7 7"></path></svg>
-                        <svg id="icon-stop" class="w-3.5 h-3.5 hidden" fill="currentColor" viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="16" rx="2" /></svg>
+                    <button id="send-btn"
+                        class="p-2 bg-gray-900 text-white rounded-lg hover:bg-black transition shadow flex items-center justify-center w-8 h-8 group-active:scale-95">
+                        <svg id="icon-send" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M5 12h14M12 5l7 7-7 7"></path>
+                        </svg>
+                        <svg id="icon-stop" class="w-3.5 h-3.5 hidden" fill="currentColor" viewBox="0 0 24 24">
+                            <rect x="4" y="4" width="16" height="16" rx="2" />
+                        </svg>
                     </button>
                 </div>
             </div>
-            <div class="text-center mt-3">
+            <div class="text-center mt-1">
                 <p class="text-[10px] text-gray-400">Research Preview. 内容由 AI 生成，请仔细甄别。</p>
             </div>
         </div>
@@ -341,30 +533,44 @@
 
     <script>
         const renderer = new marked.Renderer();
-        
-        // 修复表格渲染：兼容 Marked 新旧版本的参数差异 (修复 [object Object]undefined)
-        renderer.table = function(header, body) {
-            let h = header;
-            let b = body;
-            
-            // 检测是否收到了对象形式的参数 (Marked v12+ token)
-            if (typeof header === 'object' && header !== null && !body) {
-                h = header.header;
-                b = header.body;
-            }
-            
-            // 安全回退：如果解析出来不是字符串，确保不崩溃
-            if (!h) h = '';
-            if (!b) b = '';
 
-            return `<div class="table-container"><table><thead>${h}</thead><tbody>${b}</tbody></table></div>`;
+        renderer.table = function (data) {
+            let headerHtml = '';
+            let bodyHtml = '';
+
+            if (data.header) {
+                let rowHtml = '';
+                data.header.forEach((cell, index) => {
+                    const align = data.align && data.align[index] ? ` align="${data.align[index]}"` : '';
+                    const content = this.parser ? this.parser.parseInline(cell.tokens) : cell.text;
+                    rowHtml += `<th${align}>${content}</th>`;
+                });
+                headerHtml = `<thead><tr>${rowHtml}</tr></thead>`;
+            }
+
+            if (data.rows) {
+                let rowsHtml = '';
+                data.rows.forEach(row => {
+                    let colHtml = '';
+                    row.forEach((cell, index) => {
+                        const align = data.align && data.align[index] ? ` align="${data.align[index]}"` : '';
+                        const content = this.parser ? this.parser.parseInline(cell.tokens) : cell.text;
+                        colHtml += `<td${align}>${content}</td>`;
+                    });
+                    rowsHtml += `<tr>${colHtml}</tr>`;
+                });
+                bodyHtml = `<tbody>${rowsHtml}</tbody>`;
+            }
+
+            return `<div class="table-container"><table>${headerHtml}${bodyHtml}</table></div>`;
         };
+
 
         marked.setOptions({
             renderer: renderer,
             breaks: true,
             gfm: true,
-            highlight: function(code, language) {
+            highlight: function (code, language) {
                 const validLanguage = hljs.getLanguage(language) ? language : 'plaintext';
                 return hljs.highlight(code, { language: validLanguage }).value;
             }
@@ -386,9 +592,9 @@
             key: document.getElementById('setting-key'),
             model: document.getElementById('setting-model'),
             temp: document.getElementById('setting-temp'),
-            topp: document.getElementById('setting-topp'), // Top P 元素
+            topp: document.getElementById('setting-topp'),
             valTemp: document.getElementById('val-temp'),
-            valTopp: document.getElementById('val-topp'), // Top P Value
+            valTopp: document.getElementById('val-topp'),
             saveBtn: document.getElementById('save-settings'),
             labelModel: document.getElementById('current-model-label'),
             container: document.getElementById('chat-container'),
@@ -406,7 +612,7 @@
 
         let abortController = null;
         let isGenerating = false;
-        let chatHistory = []; 
+        let chatHistory = [];
 
         function getSettings() {
             const saved = localStorage.getItem('codon_settings');
@@ -441,30 +647,36 @@
             els.key.value = currentSettings.apiKey;
             els.model.value = currentSettings.modelId;
             els.temp.value = currentSettings.temperature;
-            els.topp.value = currentSettings.topP; // 初始化 Top P
+            els.topp.value = currentSettings.topP;
             els.valTemp.innerText = els.temp.value;
-            els.valTopp.innerText = els.topp.value; // 显示 Top P
+            els.valTopp.innerText = els.topp.value;
             els.labelModel.innerText = currentSettings.modelId;
-            
+
             updateCotUI(currentSettings.cotMode || 'auto');
+
+            if (window.innerWidth < 768) {
+                els.input.placeholder = "发送消息... (点击按钮发送)";
+            } else {
+                els.input.placeholder = "发送消息... (Enter 发送, Shift+Enter 换行)";
+            }
             els.input.focus();
         }
         init();
 
         els.settingsBtn.onclick = (e) => { e.stopPropagation(); els.settingsPanel.classList.toggle('hidden-panel'); };
-        document.onclick = (e) => { 
-            if(!els.settingsPanel.contains(e.target) && !els.settingsBtn.contains(e.target)) 
-                els.settingsPanel.classList.add('hidden-panel'); 
+        document.onclick = (e) => {
+            if (!els.settingsPanel.contains(e.target) && !els.settingsBtn.contains(e.target))
+                els.settingsPanel.classList.add('hidden-panel');
         };
         els.temp.oninput = () => els.valTemp.innerText = els.temp.value;
-        els.topp.oninput = () => els.valTopp.innerText = els.topp.value; // Top P 监听
+        els.topp.oninput = () => els.valTopp.innerText = els.topp.value;
         els.saveBtn.onclick = () => {
             const s = getSettings();
             s.baseUrl = els.url.value || defaultSettings.baseUrl;
             s.apiKey = els.key.value;
             s.modelId = els.model.value || defaultSettings.modelId;
             s.temperature = parseFloat(els.temp.value);
-            s.topP = parseFloat(els.topp.value); // 保存 Top P
+            s.topP = parseFloat(els.topp.value);
             localStorage.setItem('codon_settings', JSON.stringify(s));
             els.labelModel.innerText = s.modelId;
             els.settingsPanel.classList.add('hidden-panel');
@@ -473,8 +685,8 @@
         function updateCotUI(mode) {
             const map = {
                 'auto': { text: '思考: 自动', color: 'text-blue-500' },
-                'on':   { text: '思考: 开启', color: 'text-green-500' },
-                'off':  { text: '思考: 关闭', color: 'text-gray-400' }
+                'on': { text: '思考: 开启', color: 'text-green-500' },
+                'off': { text: '思考: 关闭', color: 'text-gray-400' }
             };
             const current = map[mode] || map['auto'];
             els.cotLabel.innerText = current.text;
@@ -492,7 +704,7 @@
 
         els.newChatBtn.onclick = () => {
             if (isGenerating && abortController) abortController.abort();
-            chatHistory = []; 
+            chatHistory = [];
             els.list.innerHTML = '';
             els.welcome.style.display = 'block';
             els.input.value = '';
@@ -561,7 +773,7 @@
             const btnRegen = row.querySelector('.btn-regen');
             btnRegen.onclick = () => {
                 if (isGenerating) return;
-                row.remove(); 
+                row.remove();
                 if (chatHistory.length > 0 && chatHistory[chatHistory.length - 1].role === 'assistant') {
                     chatHistory.pop();
                 }
@@ -572,10 +784,10 @@
         }
 
         function updateThinkingUI(container, text, startTime) {
-            if(!text) return;
+            if (!text) return;
             const elapsed = ((Date.now() - startTime) / 1000).toFixed(1);
             let details = container.querySelector('details');
-            if(!details) {
+            if (!details) {
                 details = document.createElement('details');
                 details.className = 'thought-process';
                 details.open = true;
@@ -605,7 +817,7 @@
 
             const inputVal = els.input.value.trim();
             const messageText = isRegen ? '' : (text || inputVal);
-            
+
             if (!isRegen) {
                 if (!messageText) return;
                 els.input.value = '';
@@ -620,7 +832,7 @@
             const ui = createAiMessage();
             ui.content.classList.add('cursor');
             const s = getSettings();
-            
+
             let messagesPayload = [...chatHistory];
             let accThinking = "";
             let accContent = "";
@@ -635,7 +847,7 @@
                         model: s.modelId,
                         messages: messagesPayload,
                         temperature: s.temperature,
-                        top_p: s.topP,  // 发送 Top P
+                        top_p: s.topP,
                         stream: true,
                         stream_options: { include_usage: true }
                     }),
@@ -650,15 +862,15 @@
                 while (true) {
                     const { done, value } = await reader.read();
                     if (done) break;
-                    
-                    const chunk = decoder.decode(value, {stream: true});
+
+                    const chunk = decoder.decode(value, { stream: true });
                     const lines = chunk.split('\n');
-                    
+
                     for (const line of lines) {
                         if (line.startsWith('data: ') && line !== 'data: [DONE]') {
                             try {
                                 const data = JSON.parse(line.slice(6));
-                                
+
                                 if (data.usage) {
                                     ui.tokenDisplay.textContent = `Tokens: ${data.usage.total_tokens}`;
                                     ui.tokenDisplay.classList.remove('hidden');
@@ -674,7 +886,7 @@
 
                                 if (delta.content) {
                                     let part = delta.content;
-                                    
+
                                     if (part.includes('<think>')) { isThinking = true; part = part.replace('<think>', ''); }
                                     if (part.includes('</think>')) {
                                         isThinking = false;
@@ -693,12 +905,12 @@
                                         ui.content.innerHTML = marked.parse(accContent);
                                     }
                                 }
-                            } catch (e) {}
+                            } catch (e) { }
                         }
                     }
                     if (ui.content) scrollToBottom();
                 }
-                
+
                 chatHistory.push({ role: 'assistant', content: accContent });
 
             } catch (err) {
@@ -713,20 +925,24 @@
             }
         }
 
-        els.input.addEventListener('input', function() {
+        els.input.addEventListener('input', function () {
             this.style.height = 'auto';
             this.style.height = (this.scrollHeight) + 'px';
         });
+
         els.input.addEventListener('keydown', (e) => {
-            if (e.key === 'Enter' && !e.shiftKey) {
+            const isMobile = window.innerWidth < 768;
+            if (e.key === 'Enter' && !e.shiftKey && !isMobile) {
                 e.preventDefault();
                 handleSend();
             }
         });
+
         els.sendBtn.onclick = () => handleSend();
         function scrollToBottom() {
             els.container.scrollTo({ top: els.container.scrollHeight, behavior: 'smooth' });
         }
     </script>
 </body>
+
 </html>
