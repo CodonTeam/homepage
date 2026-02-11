@@ -829,6 +829,21 @@
             const s = getSettings();
 
             let messagesPayload = [...chatHistory];
+
+            if (s.cotMode === 'force') {
+                try {
+                    const resp = await fetch('/prompt/cot.md');
+                    if (resp.ok) {
+                        const cotPrompt = await resp.text();
+                        if (cotPrompt.trim()) {
+                            messagesPayload.unshift({ role: 'system', content: cotPrompt });
+                        }
+                    }
+                } catch (e) {
+                    console.error("Failed to load CoT prompt:", e);
+                }
+            }
+
             let accThinking = "";
             let accContent = "";
             let isThinking = false;
