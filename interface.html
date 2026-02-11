@@ -91,7 +91,7 @@
         }
 
         .message-row.finished .ai-card {
-            padding-bottom: 1px;
+            padding-bottom: 2px;
         }
         
         details.thought-process {
@@ -844,9 +844,13 @@
                 }
             }
 
+            console.log(messagesPayload);
+            
+
             let accThinking = "";
             let accContent = "";
             let isThinking = false;
+            let buffer = "";
             const startTime = Date.now();
 
             try {
@@ -871,7 +875,19 @@
 
                 while (true) {
                     const { done, value } = await reader.read();
-                    if (done) break;
+                    if (done) {
+                        if (buffer) {
+                            if (isThinking) {
+                                accThinking += buffer;
+                                updateThinkingUI(ui.thinking, accThinking, startTime);
+                            } else {
+                                accContent += buffer;
+                                ui.content.setAttribute('data-raw', accContent);
+                                ui.content.innerHTML = marked.parse(accContent);
+                            }
+                        }
+                        break;
+                    }
 
                     const chunk = decoder.decode(value, { stream: true });
                     const lines = chunk.split('\n');
@@ -889,30 +905,79 @@
                                 const delta = data.choices && data.choices[0] ? data.choices[0].delta : {};
                                 if (!delta) continue;
 
+                                console.log(delta);
+                                
+
                                 if (delta.reasoning_content) {
                                     accThinking += delta.reasoning_content;
                                     updateThinkingUI(ui.thinking, accThinking, startTime);
                                 }
 
                                 if (delta.content) {
-                                    let part = delta.content;
+                                    buffer += delta.content;
+                                    const START_TAG = '<thought>';
+                                    const END_TAG = '</thought>';
 
-                                    if (part.includes('<thought>')) { isThinking = true; part = part.replace('<thought>', ''); }
-                                    if (part.includes('</thought>')) {
-                                        isThinking = false;
-                                        const [th, co] = part.split('</thought>');
-                                        accThinking += th;
-                                        updateThinkingUI(ui.thinking, accThinking, startTime);
-                                        part = co || "";
-                                    }
-
-                                    if (isThinking) {
-                                        accThinking += part;
-                                        updateThinkingUI(ui.thinking, accThinking, startTime);
-                                    } else {
-                                        accContent += part;
-                                        ui.content.setAttribute('data-raw', accContent);
-                                        ui.content.innerHTML = marked.parse(accContent);
+                                    while (true) {
+                                        if (!isThinking) {
+                                            const idx = buffer.indexOf(START_TAG);
+                                            if (idx !== -1) {
+                                                const contentPart = buffer.substring(0, idx);
+                                                if (contentPart) {
+                                                    accContent += contentPart;
+                                                    ui.content.setAttribute('data-raw', accContent);
+                                                    ui.content.innerHTML = marked.parse(accContent);
+                                                }
+                                                buffer = buffer.substring(idx + START_TAG.length);
+                                                isThinking = true;
+                                            } else {
+                                                let keepLen = 0;
+                                                const maxCheck = Math.min(buffer.length, START_TAG.length - 1);
+                                                for (let i = maxCheck; i > 0; i--) {
+                                                    if (buffer.endsWith(START_TAG.substring(0, i))) {
+                                                        keepLen = i;
+                                                        break;
+                                                    }
+                                                }
+                                                
+                                                if (keepLen < buffer.length) {
+                                                    const contentPart = buffer.substring(0, buffer.length - keepLen);
+                                                    accContent += contentPart;
+                                                    ui.content.setAttribute('data-raw', accContent);
+                                                    ui.content.innerHTML = marked.parse(accContent);
+                                                    buffer = buffer.substring(buffer.length - keepLen);
+                                                }
+                                                break;
+                                            }
+                                        } else {
+                                            const idx = buffer.indexOf(END_TAG);
+                                            if (idx !== -1) {
+                                                const thinkingPart = buffer.substring(0, idx);
+                                                if (thinkingPart) {
+                                                    accThinking += thinkingPart;
+                                                    updateThinkingUI(ui.thinking, accThinking, startTime);
+                                                }
+                                                buffer = buffer.substring(idx + END_TAG.length);
+                                                isThinking = false;
+                                            } else {
+                                                let keepLen = 0;
+                                                const maxCheck = Math.min(buffer.length, END_TAG.length - 1);
+                                                for (let i = maxCheck; i > 0; i--) {
+                                                    if (buffer.endsWith(END_TAG.substring(0, i))) {
+                                                        keepLen = i;
+                                                        break;
+                                                    }
+                                                }
+                                                
+                                                if (keepLen < buffer.length) {
+                                                    const thinkingPart = buffer.substring(0, buffer.length - keepLen);
+                                                    accThinking += thinkingPart;
+                                                    updateThinkingUI(ui.thinking, accThinking, startTime);
+                                                    buffer = buffer.substring(buffer.length - keepLen);
+                                                }
+                                                break;
+                                            }
+                                        }
                                     }
                                 }
                             } catch (e) { }
